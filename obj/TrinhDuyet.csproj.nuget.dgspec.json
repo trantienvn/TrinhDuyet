@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\code\\CS\\TrinhDuyet\\TrinhDuyet.csproj": {}
+    "D:\\DotNet\\TrinhDuyet\\TrinhDuyet.csproj": {}
   },
   "projects": {
-    "D:\\code\\CS\\TrinhDuyet\\TrinhDuyet.csproj": {
+    "D:\\DotNet\\TrinhDuyet\\TrinhDuyet.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\code\\CS\\TrinhDuyet\\TrinhDuyet.csproj",
+        "projectUniqueName": "D:\\DotNet\\TrinhDuyet\\TrinhDuyet.csproj",
         "projectName": "TrinhDuyet",
-        "projectPath": "D:\\code\\CS\\TrinhDuyet\\TrinhDuyet.csproj",
-        "packagesPath": "C:\\Users\\TranTien\\.nuget\\packages\\",
-        "outputPath": "D:\\code\\CS\\TrinhDuyet\\obj\\",
+        "projectPath": "D:\\DotNet\\TrinhDuyet\\TrinhDuyet.csproj",
+        "packagesPath": "C:\\Users\\Quyen Ly\\.nuget\\packages\\",
+        "outputPath": "D:\\DotNet\\TrinhDuyet\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\TranTien\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Quyen Ly\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

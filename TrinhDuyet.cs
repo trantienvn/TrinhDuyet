@@ -12,7 +12,8 @@ namespace TrinhDuyet
             InitWeb();
 
         }
-        public async void InitWeb() {
+        public async void InitWeb()
+        {
             //khởi tạo webview
 
             txtUrl.KeyDown += (s, e) =>
@@ -27,7 +28,7 @@ namespace TrinhDuyet
             {
                 this.Text = webView21.CoreWebView2.DocumentTitle; // đổi tiêu đề form
                 txtUrl.Text = webView21.Source.ToString();    // hiển thị URL
-                await LoadFaviconFromPageOrDefault(webView21.Source);
+                //await LoadFaviconFromPageOrDefault(webView21.Source);
             };
             await webView21.EnsureCoreWebView2Async();
             webView21.CoreWebView2.ContainsFullScreenElementChanged += (sender, args) =>
@@ -76,22 +77,7 @@ namespace TrinhDuyet
                     if (iconUrl.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
                         throw new NotSupportedException("SVG not supported by GDI+");
 
-                    // Tải dữ liệu icon
-                    var response = await client.GetAsync(iconUrl);
-                    if (!response.IsSuccessStatusCode ||
-                        !response.Content.Headers.ContentType.MediaType.StartsWith("image"))
-                    {
-                        throw new Exception("Invalid favicon format");
-                    }
 
-                    var data = await response.Content.ReadAsByteArrayAsync();
-                    using (var ms = new System.IO.MemoryStream(data))
-                    {
-                        using (var imgTemp = Image.FromStream(ms))
-                        {
-                            picicon.Image = new Bitmap(imgTemp); // clone để tránh lỗi dispose
-                        }
-                    }
                 }
             }
             catch
@@ -174,6 +160,11 @@ namespace TrinhDuyet
             {
                 MessageBox.Show("Lỗi khi tải trang: " + ex.Message);
             }
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }
