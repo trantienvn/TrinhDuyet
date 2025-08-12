@@ -6,6 +6,11 @@ namespace TrinhDuyet
 {
     public partial class TrinhDuyet : Form
     {
+        private List<string> historyList = new List<string>();
+        private HashSet<string> bookmarks = new HashSet<string>();
+        private string bookmarkFile = "bookmarks.txt";
+
+
         public TrinhDuyet()
         {
             InitializeComponent();
@@ -15,7 +20,10 @@ namespace TrinhDuyet
         public async void InitWeb()
         {
             //khởi tạo webview
+            string userDataFolder = Path.Combine(Application.StartupPath, "WebView2Data");
 
+            var env = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
+            await webView21.EnsureCoreWebView2Async(env);
             txtUrl.KeyDown += (s, e) =>
             {
                 if (e.KeyCode == Keys.Enter)
@@ -28,9 +36,25 @@ namespace TrinhDuyet
             {
                 this.Text = webView21.CoreWebView2.DocumentTitle; // đổi tiêu đề form
                 txtUrl.Text = webView21.Source.ToString();    // hiển thị URL
-                //await LoadFaviconFromPageOrDefault(webView21.Source);
+                                                              //await LoadFaviconFromPageOrDefault(webView21.Source);
+                                                              // Lưu lịch sử (tránh lưu trùng liên tiếp)
+                string currentUrl = webView21.Source.ToString();
+                if (historyList.Count == 0 || historyList[^1] != currentUrl)
+                {
+                    historyList.Add(currentUrl);
+                    File.AppendAllText("history.txt", currentUrl + Environment.NewLine); // Lưu vào file
+                }
+                // Đổi icon nếu đã có trong bookmark
+                if (bookmarks.Contains(currentUrl))
+                {
+                    pictureBox5.Image = Properties.Resources.star_fill; // sao vàng
+                }
+                else
+                {
+                    pictureBox5.Image = Properties.Resources.star; // sao rỗng
+                }
             };
-            await webView21.EnsureCoreWebView2Async();
+            //await webView21.EnsureCoreWebView2Async();
             webView21.CoreWebView2.ContainsFullScreenElementChanged += (sender, args) =>
             {
                 if (webView21.CoreWebView2.ContainsFullScreenElement)
@@ -91,6 +115,7 @@ namespace TrinhDuyet
         private async void Form1_Load(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Maximized; // Phóng to toàn màn hình
+            LoadBookmarks();
             try
             {
                 // Đảm bảo WebView2 đã khởi tạo
@@ -112,7 +137,21 @@ namespace TrinhDuyet
             {
                 MessageBox.Show("Lỗi khi tải trang: " + ex.Message);
             }
+
         }
+        private void LoadBookmarks()
+        {
+            if (File.Exists(bookmarkFile))
+            {
+                var lines = File.ReadAllLines(bookmarkFile);
+                bookmarks = new HashSet<string>(lines);
+            }
+        }
+        private void SaveBookmarks()
+        {
+            File.WriteAllLines(bookmarkFile, bookmarks);
+        }
+
         private async void LoadWeb()
         {
             try
@@ -163,7 +202,7 @@ namespace TrinhDuyet
                 // Đảm bảo WebView2 đã khởi tạo
                 await webView21.EnsureCoreWebView2Async();
 
-                string url = "https://google.com.vn";
+                string url = "https://www.google.com.vn";
 
                 if (string.IsNullOrEmpty(url)) return;
 
@@ -221,8 +260,38 @@ namespace TrinhDuyet
             // Lịch sử
             menu.Items.Add("Lịch sử", null, (s, ev) =>
             {
-                webView21.CoreWebView2.Navigate("edge://history/");
+                if (File.Exists("history.txt"))
+                {
+                    string[] history = File.ReadAllLines("history.txt");
+                    Form historyForm = new Form();
+                    historyForm.Text = "Lịch sử duyệt web";
+                    historyForm.Size = new Size(600, 400);
+
+                    ListBox listBox = new ListBox()
+                    {
+                        Dock = DockStyle.Fill
+                    };
+                    listBox.Items.AddRange(history);
+
+                    listBox.DoubleClick += (ss, ee) =>
+                    {
+                        if (listBox.SelectedItem != null)
+                        {
+                            string url = listBox.SelectedItem.ToString();
+                            webView21.CoreWebView2.Navigate(url);
+                            historyForm.Close();
+                        }
+                    };
+
+                    historyForm.Controls.Add(listBox);
+                    historyForm.ShowDialog();
+                }
+                else
+                {
+                    MessageBox.Show("Chưa có lịch sử!");
+                }
             });
+
 
             // Dấu trang
             menu.Items.Add("Dấu trang", null, (s, ev) =>
@@ -274,6 +343,24 @@ namespace TrinhDuyet
         private void topPanel_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void pictureBox5_Click(object sender, EventArgs e)
+        {
+            string currentUrl = webView21.Source.ToString();
+
+            if (bookmarks.Contains(currentUrl))
+            {
+                bookmarks.Remove(currentUrl);
+                pictureBox5.Image = Properties.Resources.star;
+            }
+            else
+            {
+                bookmarks.Add(currentUrl);
+                pictureBox5.Image = Properties.Resources.star_fill;
+            }
+
+            SaveBookmarks();
         }
     }
 }

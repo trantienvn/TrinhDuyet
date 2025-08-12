@@ -26,6 +26,7 @@
             pictureBox2 = new PictureBox();
             pictureBox1 = new PictureBox();
             picicon = new PictureBox();
+            pictureBox5 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)webView21).BeginInit();
             topPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
@@ -33,6 +34,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)picicon).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
             SuspendLayout();
             // 
             // webView21
@@ -60,6 +62,7 @@
             // topPanel
             // 
             topPanel.BackColor = Color.MistyRose;
+            topPanel.Controls.Add(pictureBox5);
             topPanel.Controls.Add(pictureBox4);
             topPanel.Controls.Add(pictureBox3);
             topPanel.Controls.Add(pictureBox2);
@@ -130,6 +133,18 @@
             picicon.TabStop = false;
             picicon.Click += picicon_Click;
             // 
+            // pictureBox5
+            // 
+            pictureBox5.Anchor = AnchorStyles.Right;
+            pictureBox5.Image = Properties.Resources.star;
+            pictureBox5.Location = new Point(956, 10);
+            pictureBox5.Name = "pictureBox5";
+            pictureBox5.Size = new Size(32, 32);
+            pictureBox5.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox5.TabIndex = 6;
+            pictureBox5.TabStop = false;
+            pictureBox5.Click += pictureBox5_Click;
+            // 
             // TrinhDuyet
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -150,6 +165,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)picicon).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox5).EndInit();
             ResumeLayout(false);
         }
 
@@ -163,5 +179,6 @@
         private PictureBox pictureBox4;
         private PictureBox pictureBox3;
         private PictureBox pictureBox2;
+        private PictureBox pictureBox5;
     }
 }
