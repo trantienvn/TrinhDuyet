@@ -90,6 +90,7 @@ namespace TrinhDuyet
 
         private async void Form1_Load(object sender, EventArgs e)
         {
+            this.WindowState = FormWindowState.Maximized; // Phóng to toàn màn hình
             try
             {
                 // Đảm bảo WebView2 đã khởi tạo
@@ -119,23 +120,41 @@ namespace TrinhDuyet
                 // Đảm bảo WebView2 đã khởi tạo
                 await webView21.EnsureCoreWebView2Async();
 
-                string url = txtUrl.Text.Trim();
+                string input = txtUrl.Text.Trim(); // Đặt tên biến là input để dễ hiểu
 
-                if (string.IsNullOrEmpty(url)) return;
+                if (string.IsNullOrEmpty(input)) return;
 
-                // Thêm https nếu thiếu
-                if (!url.StartsWith("http"))
+                // Kiểm tra có phải URL hợp lệ hay không
+                bool isUrl = Uri.TryCreate(input, UriKind.Absolute, out Uri uriResult)
+                             && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+                // Nếu không phải URL hợp lệ thì tìm kiếm Google
+                if (!isUrl)
                 {
-                    url = "https://" + url;
+                    // Nếu không có dấu chấm hoặc có khoảng trắng → tìm kiếm Google
+                    if (!input.Contains(".") || input.Contains(" "))
+                    {
+                        string searchUrl = "https://www.google.com/search?q=" + Uri.EscapeDataString(input);
+                        webView21.Source = new Uri(searchUrl);
+                    }
+                    else
+                    {
+                        // Nếu có dạng domain nhưng thiếu scheme (http/https)
+                        webView21.Source = new Uri("https://" + input);
+                    }
                 }
-
-                webView21.Source = new Uri(url);
+                else
+                {
+                    // Nếu là URL hợp lệ thì mở trực tiếp
+                    webView21.Source = uriResult;
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi khi tải trang: " + ex.Message);
             }
         }
+
 
         private async void picicon_Click(object sender, EventArgs e)
         {
@@ -164,7 +183,97 @@ namespace TrinhDuyet
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            
+            webView21.Reload();
+        }
+
+        private void pictureBox4_Click(object sender, EventArgs e)
+        {
+            ContextMenuStrip menu = new ContextMenuStrip();
+
+            // Quay lại
+            var backItem = new ToolStripMenuItem("Quay lại", null, (s, ev) =>
+            {
+                if (webView21.CanGoBack) webView21.GoBack();
+            });
+            backItem.Enabled = webView21.CanGoBack;
+            menu.Items.Add(backItem);
+
+            // Tiến tới
+            var forwardItem = new ToolStripMenuItem("Tiến tới", null, (s, ev) =>
+            {
+                if (webView21.CanGoForward) webView21.GoForward();
+            });
+            forwardItem.Enabled = webView21.CanGoForward;
+            menu.Items.Add(forwardItem);
+
+            // Tải lại
+            menu.Items.Add("Tải lại", null, (s, ev) => webView21.Reload());
+
+            menu.Items.Add(new ToolStripSeparator());
+
+            // Share
+            menu.Items.Add("Chia sẻ liên kết", null, (s, ev) =>
+            {
+                Clipboard.SetText(webView21.Source.ToString());
+                MessageBox.Show("Đã sao chép liên kết để chia sẻ!", "Share", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            });
+
+            // Lịch sử
+            menu.Items.Add("Lịch sử", null, (s, ev) =>
+            {
+                webView21.CoreWebView2.Navigate("edge://history/");
+            });
+
+            // Dấu trang
+            menu.Items.Add("Dấu trang", null, (s, ev) =>
+            {
+                // Ở đây bạn có thể lưu URL vào file hoặc DB
+                string url = webView21.Source.ToString();
+                File.AppendAllText("bookmarks.txt", url + Environment.NewLine);
+                MessageBox.Show("Đã lưu vào dấu trang!", "Bookmark", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            });
+
+            menu.Items.Add(new ToolStripSeparator());
+
+            // Trang chủ
+            menu.Items.Add("Trang chủ", null, (s, ev) =>
+            {
+                webView21.CoreWebView2.Navigate("https://www.google.com");
+            });
+
+            // Hiển thị menu dưới nút bấm
+            menu.Show(pictureBox4, new Point(0, pictureBox4.Height));
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e) // Forward
+        {
+            if (webView21 != null && webView21.CanGoForward)
+            {
+                webView21.GoForward();
+            }
+        }
+
+        private void pictureBox3_Click(object sender, EventArgs e) // Back
+        {
+            if (webView21 != null && webView21.CanGoBack)
+            {
+                webView21.GoBack();
+            }
+        }
+
+        private void webView21_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtUrl_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void topPanel_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
