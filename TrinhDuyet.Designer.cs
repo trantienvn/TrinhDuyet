@@ -43,7 +43,7 @@
             webView21.Dock = DockStyle.Fill;
             webView21.Location = new Point(0, 50);
             webView21.Name = "webView21";
-            webView21.Size = new Size(1047, 541);
+            webView21.Size = new Size(773, 352);
             webView21.TabIndex = 2;
             webView21.ZoomFactor = 1D;
             // 
@@ -52,7 +52,7 @@
             txtUrl.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             txtUrl.Location = new Point(175, 12);
             txtUrl.Name = "txtUrl";
-            txtUrl.Size = new Size(824, 27);
+            txtUrl.Size = new Size(550, 27);
             txtUrl.TabIndex = 0;
             // 
             // topPanel
@@ -68,14 +68,14 @@
             topPanel.Location = new Point(0, 0);
             topPanel.Name = "topPanel";
             topPanel.Padding = new Padding(10);
-            topPanel.Size = new Size(1047, 50);
+            topPanel.Size = new Size(773, 50);
             topPanel.TabIndex = 3;
             // 
             // pictureBox4
             // 
             pictureBox4.Anchor = AnchorStyles.Right;
             pictureBox4.Image = (Image)resources.GetObject("pictureBox4.Image");
-            pictureBox4.Location = new Point(1004, 9);
+            pictureBox4.Location = new Point(730, 9);
             pictureBox4.Name = "pictureBox4";
             pictureBox4.Size = new Size(29, 31);
             pictureBox4.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -128,7 +128,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1047, 591);
+            ClientSize = new Size(773, 402);
             Controls.Add(webView21);
             Controls.Add(topPanel);
             Icon = (Icon)resources.GetObject("$this.Icon");
