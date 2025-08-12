@@ -1,0 +1,70 @@
+# Build results
+bin/
+obj/
+
+# Visual Studio cache/options
+.vs/
+*.user
+*.suo
+
+# Backup & temp files
+*_i.c
+*_p.c
+*.ilk
+*.meta
+*.obj
+*.pch
+*.pdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.vspscc
+*.vssscc
+*.cachefile
+*.dbmdl
+*.bak
+*.backup
+*.BLOB
+
+# NuGet packages
+*.nupkg
+# Ignore packages folder except build/restore target files
+**/packages/*
+!**/packages/build/
+*.snupkg
+
+# Publish output
+publish/
+*.Publish.xml
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# Test results
+TestResult*/
+*.VisualState.xml
+*.coverage
+*.coveragexml
+
+# Others
+*.db
+*.sqlite
+*.mdf
+*.ldf

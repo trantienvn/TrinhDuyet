@@ -4,9 +4,9 @@ using Microsoft.Web.WebView2.Core;
 
 namespace TrinhDuyet
 {
-    public partial class Form1 : Form
+    public partial class TrinhDuyet : Form
     {
-        public Form1()
+        public TrinhDuyet()
         {
             InitializeComponent();
             InitWeb();

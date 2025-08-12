@@ -1,6 +1,6 @@
 ﻿namespace TrinhDuyet
 {
-    partial class Form1
+    partial class TrinhDuyet
     {
         private System.ComponentModel.IContainer components = null;
 
@@ -17,7 +17,7 @@
 
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TrinhDuyet));
             webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
             txtUrl = new TextBox();
             topPanel = new Panel();
