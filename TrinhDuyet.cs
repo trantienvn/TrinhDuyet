@@ -1,4 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
 
@@ -10,181 +15,75 @@ namespace TrinhDuyet
         private HashSet<string> bookmarks = new HashSet<string>();
         private string bookmarkFile = "bookmarks.txt";
 
-
         public TrinhDuyet()
         {
             InitializeComponent();
             InitWeb();
-
         }
+
+        // ======= KHỞI TẠO WEBVIEW =======
         public async void InitWeb()
         {
-            //khởi tạo webview
             string userDataFolder = Path.Combine(Application.StartupPath, "WebView2Data");
-
             var env = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
             await webView21.EnsureCoreWebView2Async(env);
+
             txtUrl.KeyDown += (s, e) =>
             {
                 if (e.KeyCode == Keys.Enter)
                 {
-                    LoadWeb();
-                    e.SuppressKeyPress = true; //ngăn phát âm thanh khi nhấn entter
+                    _ = NavigateFromInput();
+                    e.SuppressKeyPress = true;
                 }
             };
-            webView21.NavigationCompleted += async (sender, args) =>
+
+            webView21.NavigationCompleted += (sender, args) =>
             {
-                this.Text = webView21.CoreWebView2.DocumentTitle; // đổi tiêu đề form
-                txtUrl.Text = webView21.Source.ToString();    // hiển thị URL
-                                                              //await LoadFaviconFromPageOrDefault(webView21.Source);
-                                                              // Lưu lịch sử (tránh lưu trùng liên tiếp)
-                string currentUrl = webView21.Source.ToString();
-                if (historyList.Count == 0 || historyList[^1] != currentUrl)
-                {
-                    historyList.Add(currentUrl);
-                    File.AppendAllText("history.txt", currentUrl + Environment.NewLine); // Lưu vào file
-                }
-                // Đổi icon nếu đã có trong bookmark
-                if (bookmarks.Contains(currentUrl))
-                {
-                    pictureBox5.Image = Properties.Resources.star_fill; // sao vàng
-                }
-                else
-                {
-                    pictureBox5.Image = Properties.Resources.star; // sao rỗng
-                }
+                UpdateUIAfterNavigation();
             };
-            //await webView21.EnsureCoreWebView2Async();
+
             webView21.CoreWebView2.ContainsFullScreenElementChanged += (sender, args) =>
             {
-                if (webView21.CoreWebView2.ContainsFullScreenElement)
-                {
-                    // Bật full screen cho form
-                    this.FormBorderStyle = FormBorderStyle.None;
-                    this.WindowState = FormWindowState.Maximized;
-                }
-                else
-                {
-                    // Thoát full screen
-                    this.FormBorderStyle = FormBorderStyle.Sizable;
-                    this.WindowState = FormWindowState.Normal;
-                }
+                ToggleFullScreen(webView21.CoreWebView2.ContainsFullScreenElement);
             };
         }
-        private async Task LoadFaviconFromPageOrDefault(Uri pageUri)
+
+        // ======= ĐIỀU HƯỚNG =======
+        private async Task NavigateToUrl(string url)
         {
             try
             {
-                using (HttpClient client = new HttpClient())
-                {
-                    string html = await client.GetStringAsync(pageUri);
-
-                    string iconUrl = null;
-                    var match = System.Text.RegularExpressions.Regex.Match(
-                        html,
-                        "<link[^>]+rel=[\"']?(?:shortcut )?icon[\"']?[^>]*href=[\"']?([^\"'>]+)",
-                        System.Text.RegularExpressions.RegexOptions.IgnoreCase
-                    );
-
-                    if (match.Success)
-                    {
-                        iconUrl = match.Groups[1].Value;
-                        if (!iconUrl.StartsWith("http"))
-                            iconUrl = new Uri(pageUri, iconUrl).ToString();
-                    }
-                    else
-                    {
-                        iconUrl = $"{pageUri.Scheme}://{pageUri.Host}/favicon.ico";
-                    }
-
-                    // Bỏ qua favicon svg vì GDI+ không hỗ trợ
-                    if (iconUrl.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
-                        throw new NotSupportedException("SVG not supported by GDI+");
-
-
-                }
-            }
-            catch
-            {
-                picicon.Image = Properties.Resources.logo; // fallback
-            }
-        }
-
-
-
-        private async void Form1_Load(object sender, EventArgs e)
-        {
-            this.WindowState = FormWindowState.Maximized; // Phóng to toàn màn hình
-            LoadBookmarks();
-            try
-            {
-                // Đảm bảo WebView2 đã khởi tạo
                 await webView21.EnsureCoreWebView2Async();
-
-                string url = "https://google.com.vn";
-
-                if (string.IsNullOrEmpty(url)) return;
-
-                // Thêm https nếu thiếu
-                if (!url.StartsWith("http"))
-                {
-                    url = "https://" + url;
-                }
-
+                if (string.IsNullOrWhiteSpace(url)) return;
+                if (!url.StartsWith("http")) url = "https://" + url;
                 webView21.Source = new Uri(url);
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi khi tải trang: " + ex.Message);
             }
-
-        }
-        private void LoadBookmarks()
-        {
-            if (File.Exists(bookmarkFile))
-            {
-                var lines = File.ReadAllLines(bookmarkFile);
-                bookmarks = new HashSet<string>(lines);
-            }
-        }
-        private void SaveBookmarks()
-        {
-            File.WriteAllLines(bookmarkFile, bookmarks);
         }
 
-        private async void LoadWeb()
+        private async Task NavigateFromInput()
         {
             try
             {
-                // Đảm bảo WebView2 đã khởi tạo
                 await webView21.EnsureCoreWebView2Async();
-
-                string input = txtUrl.Text.Trim(); // Đặt tên biến là input để dễ hiểu
-
+                string input = txtUrl.Text.Trim();
                 if (string.IsNullOrEmpty(input)) return;
 
-                // Kiểm tra có phải URL hợp lệ hay không
                 bool isUrl = Uri.TryCreate(input, UriKind.Absolute, out Uri uriResult)
                              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
-                // Nếu không phải URL hợp lệ thì tìm kiếm Google
                 if (!isUrl)
                 {
-                    // Nếu không có dấu chấm hoặc có khoảng trắng → tìm kiếm Google
                     if (!input.Contains(".") || input.Contains(" "))
-                    {
-                        string searchUrl = "https://www.google.com/search?q=" + Uri.EscapeDataString(input);
-                        webView21.Source = new Uri(searchUrl);
-                    }
+                        await NavigateToUrl("https://www.google.com/search?q=" + Uri.EscapeDataString(input));
                     else
-                    {
-                        // Nếu có dạng domain nhưng thiếu scheme (http/https)
-                        webView21.Source = new Uri("https://" + input);
-                    }
+                        await NavigateToUrl(input);
                 }
                 else
                 {
-                    // Nếu là URL hợp lệ thì mở trực tiếp
                     webView21.Source = uriResult;
                 }
             }
@@ -194,173 +93,143 @@ namespace TrinhDuyet
             }
         }
 
+        // ======= BOOKMARKS =======
+        private void LoadBookmarks()
+        {
+            if (File.Exists(bookmarkFile))
+                bookmarks = new HashSet<string>(File.ReadAllLines(bookmarkFile));
+        }
 
+        private void SaveBookmarks()
+        {
+            File.WriteAllLines(bookmarkFile, bookmarks);
+        }
+
+        private void ToggleBookmark(string url)
+        {
+            if (bookmarks.Contains(url))
+            {
+                bookmarks.Remove(url);
+                pictureBox5.Image = Properties.Resources.star;
+            }
+            else
+            {
+                bookmarks.Add(url);
+                pictureBox5.Image = Properties.Resources.star_fill;
+            }
+            SaveBookmarks();
+        }
+
+        // ======= UI & HISTORY =======
+        private void UpdateUIAfterNavigation()
+        {
+            string currentUrl = webView21.Source.ToString();
+            this.Text = webView21.CoreWebView2.DocumentTitle;
+            txtUrl.Text = currentUrl;
+
+            if (historyList.Count == 0 || historyList[^1] != currentUrl)
+            {
+                historyList.Add(currentUrl);
+                File.AppendAllText("history.txt", currentUrl + Environment.NewLine);
+            }
+
+            pictureBox5.Image = bookmarks.Contains(currentUrl)
+                ? Properties.Resources.star_fill
+                : Properties.Resources.star;
+        }
+
+        private void ShowHistory()
+        {
+            if (!File.Exists("history.txt"))
+            {
+                MessageBox.Show("Chưa có lịch sử!");
+                return;
+            }
+
+            string[] history = File.ReadAllLines("history.txt");
+            Form historyForm = new Form
+            {
+                Text = "Lịch sử duyệt web",
+                Size = new Size(600, 400)
+            };
+
+            ListBox listBox = new ListBox { Dock = DockStyle.Fill };
+            listBox.Items.AddRange(history);
+            listBox.DoubleClick += (s, e) =>
+            {
+                if (listBox.SelectedItem != null)
+                {
+                    _ = NavigateToUrl(listBox.SelectedItem.ToString());
+                    historyForm.Close();
+                }
+            };
+
+            historyForm.Controls.Add(listBox);
+            historyForm.ShowDialog();
+        }
+
+        // ======= FULL SCREEN =======
+        private void ToggleFullScreen(bool enable)
+        {
+            if (enable)
+            {
+                this.FormBorderStyle = FormBorderStyle.None;
+                this.WindowState = FormWindowState.Maximized;
+            }
+            else
+            {
+                this.FormBorderStyle = FormBorderStyle.Sizable;
+                this.WindowState = FormWindowState.Normal;
+            }
+        }
+
+        // ======= FORM LOAD =======
+        private async void Form1_Load(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Maximized;
+            LoadBookmarks();
+            await NavigateToUrl("https://google.com.vn");
+        }
+
+        // ======= ICONS EVENTS =======
         private async void picicon_Click(object sender, EventArgs e)
         {
-            try
-            {
-                // Đảm bảo WebView2 đã khởi tạo
-                await webView21.EnsureCoreWebView2Async();
-
-                string url = "https://www.google.com.vn";
-
-                if (string.IsNullOrEmpty(url)) return;
-
-                // Thêm https nếu thiếu
-                if (!url.StartsWith("http"))
-                {
-                    url = "https://" + url;
-                }
-
-                webView21.Source = new Uri(url);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Lỗi khi tải trang: " + ex.Message);
-            }
+            await NavigateToUrl("https://www.google.com.vn");
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-            webView21.Reload();
-        }
+        private void pictureBox1_Click(object sender, EventArgs e) => webView21.Reload();
+        private void pictureBox2_Click(object sender, EventArgs e) { if (webView21.CanGoForward) webView21.GoForward(); }
+        private void pictureBox3_Click(object sender, EventArgs e) { if (webView21.CanGoBack) webView21.GoBack(); }
+        private void pictureBox5_Click(object sender, EventArgs e) => ToggleBookmark(webView21.Source.ToString());
 
         private void pictureBox4_Click(object sender, EventArgs e)
         {
             ContextMenuStrip menu = new ContextMenuStrip();
 
-            // Quay lại
-            var backItem = new ToolStripMenuItem("Quay lại", null, (s, ev) =>
-            {
-                if (webView21.CanGoBack) webView21.GoBack();
-            });
-            backItem.Enabled = webView21.CanGoBack;
+            var backItem = new ToolStripMenuItem("Quay lại", null, (s, ev) => { if (webView21.CanGoBack) webView21.GoBack(); })
+            { Enabled = webView21.CanGoBack };
             menu.Items.Add(backItem);
 
-            // Tiến tới
-            var forwardItem = new ToolStripMenuItem("Tiến tới", null, (s, ev) =>
-            {
-                if (webView21.CanGoForward) webView21.GoForward();
-            });
-            forwardItem.Enabled = webView21.CanGoForward;
+            var forwardItem = new ToolStripMenuItem("Tiến tới", null, (s, ev) => { if (webView21.CanGoForward) webView21.GoForward(); })
+            { Enabled = webView21.CanGoForward };
             menu.Items.Add(forwardItem);
 
-            // Tải lại
             menu.Items.Add("Tải lại", null, (s, ev) => webView21.Reload());
-
             menu.Items.Add(new ToolStripSeparator());
 
-            // Share
             menu.Items.Add("Chia sẻ liên kết", null, (s, ev) =>
             {
                 Clipboard.SetText(webView21.Source.ToString());
-                MessageBox.Show("Đã sao chép liên kết để chia sẻ!", "Share", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Đã sao chép liên kết!", "Share", MessageBoxButtons.OK, MessageBoxIcon.Information);
             });
 
-            // Lịch sử
-            menu.Items.Add("Lịch sử", null, (s, ev) =>
-            {
-                if (File.Exists("history.txt"))
-                {
-                    string[] history = File.ReadAllLines("history.txt");
-                    Form historyForm = new Form();
-                    historyForm.Text = "Lịch sử duyệt web";
-                    historyForm.Size = new Size(600, 400);
-
-                    ListBox listBox = new ListBox()
-                    {
-                        Dock = DockStyle.Fill
-                    };
-                    listBox.Items.AddRange(history);
-
-                    listBox.DoubleClick += (ss, ee) =>
-                    {
-                        if (listBox.SelectedItem != null)
-                        {
-                            string url = listBox.SelectedItem.ToString();
-                            webView21.CoreWebView2.Navigate(url);
-                            historyForm.Close();
-                        }
-                    };
-
-                    historyForm.Controls.Add(listBox);
-                    historyForm.ShowDialog();
-                }
-                else
-                {
-                    MessageBox.Show("Chưa có lịch sử!");
-                }
-            });
-
-
-            // Dấu trang
-            menu.Items.Add("Dấu trang", null, (s, ev) =>
-            {
-                // Ở đây bạn có thể lưu URL vào file hoặc DB
-                string url = webView21.Source.ToString();
-                File.AppendAllText("bookmarks.txt", url + Environment.NewLine);
-                MessageBox.Show("Đã lưu vào dấu trang!", "Bookmark", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            });
+            menu.Items.Add("Lịch sử", null, (s, ev) => ShowHistory());
+            menu.Items.Add("Dấu trang", null, (s, ev) => ToggleBookmark(webView21.Source.ToString()));
 
             menu.Items.Add(new ToolStripSeparator());
+            menu.Items.Add("Trang chủ", null, (s, ev) => _ = NavigateToUrl("https://www.google.com"));
 
-            // Trang chủ
-            menu.Items.Add("Trang chủ", null, (s, ev) =>
-            {
-                webView21.CoreWebView2.Navigate("https://www.google.com");
-            });
-
-            // Hiển thị menu dưới nút bấm
             menu.Show(pictureBox4, new Point(0, pictureBox4.Height));
-        }
-
-        private void pictureBox2_Click(object sender, EventArgs e) // Forward
-        {
-            if (webView21 != null && webView21.CanGoForward)
-            {
-                webView21.GoForward();
-            }
-        }
-
-        private void pictureBox3_Click(object sender, EventArgs e) // Back
-        {
-            if (webView21 != null && webView21.CanGoBack)
-            {
-                webView21.GoBack();
-            }
-        }
-
-        private void webView21_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtUrl_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void topPanel_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void pictureBox5_Click(object sender, EventArgs e)
-        {
-            string currentUrl = webView21.Source.ToString();
-
-            if (bookmarks.Contains(currentUrl))
-            {
-                bookmarks.Remove(currentUrl);
-                pictureBox5.Image = Properties.Resources.star;
-            }
-            else
-            {
-                bookmarks.Add(currentUrl);
-                pictureBox5.Image = Properties.Resources.star_fill;
-            }
-
-            SaveBookmarks();
         }
     }
 }

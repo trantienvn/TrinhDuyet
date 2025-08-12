@@ -48,7 +48,6 @@
             webView21.Size = new Size(1053, 475);
             webView21.TabIndex = 2;
             webView21.ZoomFactor = 1D;
-            webView21.Click += webView21_Click;
             // 
             // txtUrl
             // 
@@ -57,7 +56,6 @@
             txtUrl.Name = "txtUrl";
             txtUrl.Size = new Size(782, 27);
             txtUrl.TabIndex = 0;
-            txtUrl.TextChanged += txtUrl_TextChanged;
             // 
             // topPanel
             // 
@@ -75,7 +73,6 @@
             topPanel.Padding = new Padding(10);
             topPanel.Size = new Size(1053, 50);
             topPanel.TabIndex = 3;
-            topPanel.Paint += topPanel_Paint;
             // 
             // pictureBox4
             // 
