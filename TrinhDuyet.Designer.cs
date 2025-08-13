@@ -21,20 +21,20 @@
             webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
             txtUrl = new TextBox();
             topPanel = new Panel();
+            pictureBox5 = new PictureBox();
             pictureBox4 = new PictureBox();
             pictureBox3 = new PictureBox();
             pictureBox2 = new PictureBox();
             pictureBox1 = new PictureBox();
             picicon = new PictureBox();
-            pictureBox5 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)webView21).BeginInit();
             topPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)picicon).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
             SuspendLayout();
             // 
             // webView21
@@ -48,15 +48,13 @@
             webView21.Size = new Size(1053, 475);
             webView21.TabIndex = 2;
             webView21.ZoomFactor = 1D;
-            
-
             // 
             // txtUrl
             // 
             txtUrl.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             txtUrl.Location = new Point(158, 13);
             txtUrl.Name = "txtUrl";
-            txtUrl.Size = new Size(782, 27);
+            txtUrl.Size = new Size(815, 27);
             txtUrl.TabIndex = 0;
             // 
             // topPanel
@@ -76,13 +74,25 @@
             topPanel.Size = new Size(1053, 50);
             topPanel.TabIndex = 3;
             // 
+            // pictureBox5
+            // 
+            pictureBox5.Anchor = AnchorStyles.Right;
+            pictureBox5.Image = Properties.Resources.star;
+            pictureBox5.Location = new Point(979, 13);
+            pictureBox5.Name = "pictureBox5";
+            pictureBox5.Size = new Size(25, 25);
+            pictureBox5.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox5.TabIndex = 6;
+            pictureBox5.TabStop = false;
+            pictureBox5.Click += pictureBox5_Click;
+            // 
             // pictureBox4
             // 
             pictureBox4.Anchor = AnchorStyles.Right;
             pictureBox4.Image = (Image)resources.GetObject("pictureBox4.Image");
-            pictureBox4.Location = new Point(1010, 10);
+            pictureBox4.Location = new Point(1010, 13);
             pictureBox4.Name = "pictureBox4";
-            pictureBox4.Size = new Size(32, 32);
+            pictureBox4.Size = new Size(25, 25);
             pictureBox4.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox4.TabIndex = 5;
             pictureBox4.TabStop = false;
@@ -132,18 +142,6 @@
             picicon.TabStop = false;
             picicon.Click += picicon_Click;
             // 
-            // pictureBox5
-            // 
-            pictureBox5.Anchor = AnchorStyles.Right;
-            pictureBox5.Image = Properties.Resources.star;
-            pictureBox5.Location = new Point(956, 10);
-            pictureBox5.Name = "pictureBox5";
-            pictureBox5.Size = new Size(32, 32);
-            pictureBox5.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox5.TabIndex = 6;
-            pictureBox5.TabStop = false;
-            pictureBox5.Click += pictureBox5_Click;
-            // 
             // TrinhDuyet
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -159,12 +157,12 @@
             ((System.ComponentModel.ISupportInitialize)webView21).EndInit();
             topPanel.ResumeLayout(false);
             topPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox5).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)picicon).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox5).EndInit();
             ResumeLayout(false);
         }
 
