@@ -48,6 +48,8 @@
             webView21.Size = new Size(1053, 475);
             webView21.TabIndex = 2;
             webView21.ZoomFactor = 1D;
+            
+
             // 
             // txtUrl
             // 

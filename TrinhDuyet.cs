@@ -15,19 +15,41 @@ namespace TrinhDuyet
         private HashSet<string> bookmarks = new HashSet<string>();
         private string bookmarkFile = "bookmarks.txt";
 
-        public TrinhDuyet()
+        public TrinhDuyet(string startUrl = "about:blank")
         {
             InitializeComponent();
-            InitWeb();
+            this.Load += async (s, e) =>
+            {
+                await  InitWeb();
+                await NavigateToUrl(startUrl);
+            };
+            //webView21.KeyPreview = true;
+            webView21.KeyDown += Form1_KeyDown;
+        }
+
+        private void Form1_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.N)
+            {
+                e.Handled = true;
+                var newForm = new TrinhDuyet("https://www.google.com"); // hoặc truyền URL bạn muốn
+                newForm.Show();
+            }
         }
 
         // ======= KHỞI TẠO WEBVIEW =======
-        public async void InitWeb()
+        public async Task InitWeb()
         {
-            string userDataFolder = Path.Combine(Application.StartupPath, "WebView2Data");
-            var env = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
-            await webView21.EnsureCoreWebView2Async(env);
+            if (webView21.CoreWebView2 != null) return;
 
+            
+            try
+            {
+                var env = await Program.GetSharedEnv();
+                await webView21.EnsureCoreWebView2Async(env);
+            } catch(Exception e) {
+                await webView21.EnsureCoreWebView2Async(); 
+            }
             txtUrl.KeyDown += (s, e) =>
             {
                 if (e.KeyCode == Keys.Enter)
@@ -46,6 +68,7 @@ namespace TrinhDuyet
             {
                 ToggleFullScreen(webView21.CoreWebView2.ContainsFullScreenElement);
             };
+            webView21.CoreWebView2.NewWindowRequested += webView21_NewWindowRequested;
         }
 
         // ======= ĐIỀU HƯỚNG =======
@@ -62,6 +85,13 @@ namespace TrinhDuyet
             {
                 MessageBox.Show("Lỗi khi tải trang: " + ex.Message);
             }
+        }
+        private void webView21_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e)
+        {
+            e.Handled = true;
+            // Mở cửa sổ mới giống hệt form này, nhưng với URL mới
+            var newBrowser = new TrinhDuyet(e.Uri);
+            newBrowser.Show();
         }
 
         private async Task NavigateFromInput()
