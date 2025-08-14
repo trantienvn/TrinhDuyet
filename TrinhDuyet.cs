@@ -35,6 +35,11 @@ namespace TrinhDuyet
                 var newForm = new TrinhDuyet("https://www.google.com"); // hoặc truyền URL bạn muốn
                 newForm.Show();
             }
+            if (e.KeyCode == Keys.F11)
+            {
+                ToggleFullScreen(this.FormBorderStyle != FormBorderStyle.None);
+            }
+
         }
 
         // ======= KHỞI TẠO WEBVIEW =======
@@ -203,11 +208,19 @@ namespace TrinhDuyet
         {
             if (enable)
             {
+                topPanel.Visible = false;
+
+                // Cho webView chiếm toàn bộ form
+                webView21.Dock = DockStyle.Fill;
+
                 this.FormBorderStyle = FormBorderStyle.None;
                 this.WindowState = FormWindowState.Maximized;
             }
             else
             {
+                // Hiện lại topPanel
+                topPanel.Visible = true;
+
                 this.FormBorderStyle = FormBorderStyle.Sizable;
                 this.WindowState = FormWindowState.Normal;
             }
