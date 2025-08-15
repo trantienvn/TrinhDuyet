@@ -13,8 +13,9 @@ namespace TrinhDuyet
     {
         private List<string> historyList = new List<string>();
         private List<string> bookmarks = new List<string>();
+        private string[] loginInfo = new string[2];
         private string bookmarkFile = "bookmarks.txt";
-
+        private bool isLoggedIn = false;
         public TrinhDuyet(string startUrl = "about:blank")
         {
             InitializeComponent();
@@ -268,6 +269,19 @@ namespace TrinhDuyet
         {
             this.WindowState = FormWindowState.Maximized;
             LoadBookmarks();
+            getLogin();
+            string savedUser = loginInfo[0];
+            string savedPass = loginInfo[1];
+
+            if (!string.IsNullOrEmpty(savedUser) && !string.IsNullOrEmpty(savedPass))
+            {
+                var store = new UserStore("users.db");
+                if (store.Login(savedUser, savedPass, out var err))
+                {
+                    pictureBox6.Image = Properties.Resources.loggedin;
+                    isLoggedIn = true;
+                }
+            }
             await NavigateToUrl("https://google.com.vn");
         }
         private void LoadUrlAutoComplete()
@@ -353,9 +367,57 @@ namespace TrinhDuyet
 
         private void pictureBox6_Click(object sender, EventArgs e)
         {
+            ContextMenuStrip menu = new ContextMenuStrip();
+            if (!isLoggedIn)
+            {
+
+                menu.Items.Add("Đăng nhập", null, (s, ev) => Login());
+            }
+
+            else
+            {
+                menu.Items.Add(loginInfo[0], null);
+                menu.Items.Add("Đăng xuất", null, (s, ev) => Logout());
+            }
+            menu.Show(pictureBox6, new Point(0, pictureBox6.Height));
+        }
+        private void Login()
+        {
             var store = new UserStore("users.db");
             DangNhap dn = new DangNhap(store);
-            dn.Show();
+            var result = dn.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                pictureBox6.Image = Properties.Resources.loggedin;
+                isLoggedIn = true;
+                string filePath = "User.data";
+                // Ví dụ: dn.Username và dn.Password là thông tin từ form đăng nhập
+                File.WriteAllLines(filePath, new string[] { dn.Username, dn.Password });
+            }
+        }
+        private void Logout()
+        {
+            isLoggedIn = false;
+            pictureBox6.Image = Properties.Resources.user;
+            string filePath = "User.data";
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+            getLogin();
+        }
+        private void getLogin()
+        {
+            if (File.Exists("User.data")) { 
+                string[] Info = File.ReadAllLines("User.data");
+                loginInfo = Info;
+            }
+            else
+            {
+                loginInfo[0] = null;
+                loginInfo[1] = null;
+            }
+
         }
     }
 }

@@ -13,7 +13,8 @@ namespace TrinhDuyet
     public partial class DangNhap : Form
     {
         private readonly UserStore _store;
-
+        public string Username { get; private set; }
+        public string Password { get; private set; }
         public DangNhap(UserStore store)
         {
             _store = store;
@@ -23,6 +24,15 @@ namespace TrinhDuyet
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             InitializeComponent();
+            this.chkShowLogin.CheckedChanged += (s, e) =>
+            {
+                this.txtLoginPass.UseSystemPasswordChar = !this.chkShowLogin.Checked;
+            };
+            this.chkShowReg.CheckedChanged += (s, e) =>
+            {
+                this.txtRegPass.UseSystemPasswordChar = !this.chkShowReg.Checked;
+                this.txtRegPass2.UseSystemPasswordChar = !this.chkShowReg.Checked;
+            };
         }
 
         private void BtnLogin_Click(object sender, EventArgs e)
@@ -30,6 +40,10 @@ namespace TrinhDuyet
             if (_store.Login(txtLoginUser.Text.Trim(), txtLoginPass.Text, out var err))
             {
                 MessageBox.Show("Đăng nhập thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.DialogResult = DialogResult.OK; // báo thành công
+                Username = txtLoginUser.Text;
+                Password = txtLoginPass.Text;
+                this.Close();
                 // TODO: Mở form chính
             }
             else
@@ -48,6 +62,10 @@ namespace TrinhDuyet
             if (_store.Register(txtRegUser.Text.Trim(), txtRegPass.Text, out var err))
             {
                 MessageBox.Show("Đăng ký thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.DialogResult = DialogResult.OK; // báo thành công
+                Username = txtRegUser.Text;
+                Password = txtRegPass.Text;
+                this.Close();
             }
             else
             {

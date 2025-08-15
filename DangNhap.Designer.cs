@@ -61,7 +61,7 @@
             tabControl.Location = new Point(0, 0);
             tabControl.Name = "tabControl";
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(682, 365);
+            tabControl.Size = new Size(717, 390);
             tabControl.TabIndex = 0;
             // 
             // tabLogin
@@ -74,7 +74,7 @@
             tabLogin.Controls.Add(lblLP);
             tabLogin.Location = new Point(4, 29);
             tabLogin.Name = "tabLogin";
-            tabLogin.Size = new Size(674, 332);
+            tabLogin.Size = new Size(709, 357);
             tabLogin.TabIndex = 0;
             tabLogin.Text = "Đăng nhập";
             // 
@@ -84,7 +84,7 @@
             chkShowLogin.Location = new Point(455, 130);
             chkShowLogin.Name = "chkShowLogin";
             chkShowLogin.Size = new Size(127, 24);
-            chkShowLogin.TabIndex = 0;
+            chkShowLogin.TabIndex = 2;
             chkShowLogin.Text = "Hiện mật khẩu";
             // 
             // btnLogin
@@ -92,7 +92,7 @@
             btnLogin.Location = new Point(249, 180);
             btnLogin.Name = "btnLogin";
             btnLogin.Size = new Size(200, 33);
-            btnLogin.TabIndex = 1;
+            btnLogin.TabIndex = 3;
             btnLogin.Text = "Đăng nhập";
             btnLogin.Click += BtnLogin_Click;
             // 
@@ -101,7 +101,7 @@
             txtLoginPass.Location = new Point(249, 127);
             txtLoginPass.Name = "txtLoginPass";
             txtLoginPass.Size = new Size(200, 27);
-            txtLoginPass.TabIndex = 2;
+            txtLoginPass.TabIndex = 1;
             txtLoginPass.UseSystemPasswordChar = true;
             // 
             // txtLoginUser
@@ -109,7 +109,7 @@
             txtLoginUser.Location = new Point(249, 87);
             txtLoginUser.Name = "txtLoginUser";
             txtLoginUser.Size = new Size(200, 27);
-            txtLoginUser.TabIndex = 3;
+            txtLoginUser.TabIndex = 0;
             // 
             // lblLU
             // 
@@ -141,7 +141,7 @@
             tabRegister.Controls.Add(lblRP2);
             tabRegister.Location = new Point(4, 29);
             tabRegister.Name = "tabRegister";
-            tabRegister.Size = new Size(674, 332);
+            tabRegister.Size = new Size(710, 357);
             tabRegister.TabIndex = 1;
             tabRegister.Text = "Đăng ký";
             // 
@@ -151,7 +151,7 @@
             chkShowReg.Location = new Point(460, 156);
             chkShowReg.Name = "chkShowReg";
             chkShowReg.Size = new Size(127, 24);
-            chkShowReg.TabIndex = 0;
+            chkShowReg.TabIndex = 3;
             chkShowReg.Text = "Hiện mật khẩu";
             // 
             // btnRegister
@@ -159,7 +159,7 @@
             btnRegister.Location = new Point(242, 198);
             btnRegister.Name = "btnRegister";
             btnRegister.Size = new Size(200, 33);
-            btnRegister.TabIndex = 1;
+            btnRegister.TabIndex = 4;
             btnRegister.Text = "Tạo tài khoản";
             btnRegister.Click += BtnRegister_Click;
             // 
@@ -176,7 +176,7 @@
             txtRegPass.Location = new Point(242, 118);
             txtRegPass.Name = "txtRegPass";
             txtRegPass.Size = new Size(200, 27);
-            txtRegPass.TabIndex = 3;
+            txtRegPass.TabIndex = 1;
             txtRegPass.UseSystemPasswordChar = true;
             // 
             // txtRegUser
@@ -184,7 +184,7 @@
             txtRegUser.Location = new Point(242, 83);
             txtRegUser.Name = "txtRegUser";
             txtRegUser.Size = new Size(200, 27);
-            txtRegUser.TabIndex = 4;
+            txtRegUser.TabIndex = 0;
             // 
             // lblRU
             // 
@@ -215,7 +215,7 @@
             // 
             // DangNhap
             // 
-            ClientSize = new Size(682, 365);
+            ClientSize = new Size(717, 390);
             Controls.Add(tabControl);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
@@ -228,6 +228,7 @@
             tabRegister.ResumeLayout(false);
             tabRegister.PerformLayout();
             ResumeLayout(false);
+
         }
         private Label lblLU;
         private Label lblLP;
