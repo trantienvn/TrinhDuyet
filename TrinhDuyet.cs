@@ -12,7 +12,7 @@ namespace TrinhDuyet
     public partial class TrinhDuyet : Form
     {
         private List<string> historyList = new List<string>();
-        private HashSet<string> bookmarks = new HashSet<string>();
+        private List<string> bookmarks = new List<string>();
         private string bookmarkFile = "bookmarks.txt";
 
         public TrinhDuyet(string startUrl = "about:blank")
@@ -132,7 +132,7 @@ namespace TrinhDuyet
         private void LoadBookmarks()
         {
             if (File.Exists(bookmarkFile))
-                bookmarks = new HashSet<string>(File.ReadAllLines(bookmarkFile));
+                bookmarks = new List<string>(File.ReadAllLines(bookmarkFile));
         }
 
         private void SaveBookmarks()
@@ -149,10 +149,39 @@ namespace TrinhDuyet
             }
             else
             {
-                bookmarks.Add(url);
+                bookmarks.Insert(0,url);
                 pictureBox5.Image = Properties.Resources.star_fill;
             }
             SaveBookmarks();
+        }
+        private void ShowBookmarks()
+        {
+            if (!File.Exists(bookmarkFile))
+            {
+                MessageBox.Show("Chưa có dấu trang!");
+                return;
+            }
+
+            string[] bookmark = File.ReadAllLines(bookmarkFile);
+            Form bookmarkForm = new Form
+            {
+                Text = "Trang đã được đánh dấu sao",
+                Size = new Size(600, 400)
+            };
+
+            ListBox listBox = new ListBox { Dock = DockStyle.Fill };
+            listBox.Items.AddRange(bookmark);
+            listBox.DoubleClick += (s, e) =>
+            {
+                if (listBox.SelectedItem != null)
+                {
+                    _ = NavigateToUrl(listBox.SelectedItem.ToString());
+                    bookmarkForm.Close();
+                }
+            };
+
+            bookmarkForm.Controls.Add(listBox);
+            bookmarkForm.ShowDialog();
         }
 
         // ======= UI & HISTORY =======
@@ -162,11 +191,15 @@ namespace TrinhDuyet
             this.Text = webView21.CoreWebView2.DocumentTitle;
             txtUrl.Text = currentUrl;
 
-            if (historyList.Count == 0 || historyList[^1] != currentUrl)
-            {
-                historyList.Add(currentUrl);
-                File.AppendAllText("history.txt", currentUrl + Environment.NewLine);
-            }
+            // Nếu URL đã có trong lịch sử thì xóa khỏi vị trí cũ
+            historyList.Remove(currentUrl);
+
+            // Thêm URL mới lên đầu danh sách
+            historyList.Insert(0, currentUrl);
+
+            // Ghi lại toàn bộ lịch sử vào file (URL mới nhất trên đầu)
+            File.WriteAllLines("history.txt", historyList);
+
 
             pictureBox5.Image = bookmarks.Contains(currentUrl)
                 ? Properties.Resources.star_fill
@@ -233,6 +266,31 @@ namespace TrinhDuyet
             LoadBookmarks();
             await NavigateToUrl("https://google.com.vn");
         }
+        private void ClearBrowsingHistory()
+        {
+            DialogResult result = MessageBox.Show(
+                "Bạn có chắc chắn muốn xóa toàn bộ lịch sử duyệt web?",
+                "Xác nhận xóa lịch sử",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                // Xóa danh sách trong bộ nhớ
+                historyList.Clear();
+
+                // Xóa file nếu tồn tại
+                string filePath = "history.txt";
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+
+                MessageBox.Show("Đã xóa toàn bộ lịch sử duyệt web.", "Hoàn tất", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
 
         // ======= ICONS EVENTS =======
         private async void picicon_Click(object sender, EventArgs e)
@@ -267,8 +325,8 @@ namespace TrinhDuyet
             });
 
             menu.Items.Add("Lịch sử", null, (s, ev) => ShowHistory());
-            menu.Items.Add("Dấu trang", null, (s, ev) => ToggleBookmark(webView21.Source.ToString()));
-
+            menu.Items.Add("Dấu trang", null, (s, ev) => ShowBookmarks());
+            menu.Items.Add("Xóa lịch sử", null, (s, ev) => ClearBrowsingHistory());
             menu.Items.Add(new ToolStripSeparator());
             menu.Items.Add("Trang chủ", null, (s, ev) => _ = NavigateToUrl("https://www.google.com"));
 
