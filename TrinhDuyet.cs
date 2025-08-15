@@ -74,6 +74,7 @@ namespace TrinhDuyet
                 ToggleFullScreen(webView21.CoreWebView2.ContainsFullScreenElement);
             };
             webView21.CoreWebView2.NewWindowRequested += webView21_NewWindowRequested;
+            LoadUrlAutoComplete();
         }
 
         // ======= ĐIỀU HƯỚNG =======
@@ -204,6 +205,7 @@ namespace TrinhDuyet
             pictureBox5.Image = bookmarks.Contains(currentUrl)
                 ? Properties.Resources.star_fill
                 : Properties.Resources.star;
+            LoadUrlAutoComplete();
         }
 
         private void ShowHistory()
@@ -266,6 +268,19 @@ namespace TrinhDuyet
             LoadBookmarks();
             await NavigateToUrl("https://google.com.vn");
         }
+        private void LoadUrlAutoComplete()
+        {
+            if (!File.Exists("history.txt")) return;
+
+            string[] historyUrls = File.ReadAllLines("history.txt");
+            AutoCompleteStringCollection autoCompleteUrls = new AutoCompleteStringCollection();
+            autoCompleteUrls.AddRange(historyUrls);
+
+            txtUrl.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            txtUrl.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            txtUrl.AutoCompleteCustomSource = autoCompleteUrls;
+        }
+
         private void ClearBrowsingHistory()
         {
             DialogResult result = MessageBox.Show(
@@ -289,6 +304,7 @@ namespace TrinhDuyet
 
                 MessageBox.Show("Đã xóa toàn bộ lịch sử duyệt web.", "Hoàn tất", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+            LoadUrlAutoComplete();
         }
 
 
