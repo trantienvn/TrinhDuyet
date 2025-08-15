@@ -393,6 +393,7 @@ namespace TrinhDuyet
                 string filePath = "User.data";
                 // Ví dụ: dn.Username và dn.Password là thông tin từ form đăng nhập
                 File.WriteAllLines(filePath, new string[] { dn.Username, dn.Password });
+                getLogin();
             }
         }
         private void Logout()
