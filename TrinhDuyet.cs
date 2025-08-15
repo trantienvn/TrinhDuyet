@@ -20,7 +20,7 @@ namespace TrinhDuyet
             InitializeComponent();
             this.Load += async (s, e) =>
             {
-                await  InitWeb();
+                await InitWeb();
                 await NavigateToUrl(startUrl);
             };
             //webView21.KeyPreview = true;
@@ -47,13 +47,15 @@ namespace TrinhDuyet
         {
             if (webView21.CoreWebView2 != null) return;
 
-            
+
             try
             {
                 var env = await Program.GetSharedEnv();
                 await webView21.EnsureCoreWebView2Async(env);
-            } catch(Exception e) {
-                await webView21.EnsureCoreWebView2Async(); 
+            }
+            catch (Exception e)
+            {
+                await webView21.EnsureCoreWebView2Async();
             }
             txtUrl.KeyDown += (s, e) =>
             {
@@ -150,7 +152,7 @@ namespace TrinhDuyet
             }
             else
             {
-                bookmarks.Insert(0,url);
+                bookmarks.Insert(0, url);
                 pictureBox5.Image = Properties.Resources.star_fill;
             }
             SaveBookmarks();
@@ -347,6 +349,13 @@ namespace TrinhDuyet
             menu.Items.Add("Trang chủ", null, (s, ev) => _ = NavigateToUrl("https://www.google.com"));
 
             menu.Show(pictureBox4, new Point(0, pictureBox4.Height));
+        }
+
+        private void pictureBox6_Click(object sender, EventArgs e)
+        {
+            var store = new UserStore("users.db");
+            DangNhap dn = new DangNhap(store);
+            dn.Show();
         }
     }
 }

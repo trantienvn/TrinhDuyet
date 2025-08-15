@@ -20,8 +20,8 @@ namespace TrinhDuyet
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
-            string startUrl = "https://google.com";
+            var store = new UserStore("users.db");
+            string startUrl = "https://www.google.com";
             if (args.Length > 0)
             {
                 startUrl = args[0]; // Lấy tham số URL đầu tiên

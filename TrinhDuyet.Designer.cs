@@ -27,6 +27,7 @@
             pictureBox2 = new PictureBox();
             pictureBox1 = new PictureBox();
             picicon = new PictureBox();
+            pictureBox6 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)webView21).BeginInit();
             topPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
@@ -35,6 +36,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)picicon).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox6).BeginInit();
             SuspendLayout();
             // 
             // webView21
@@ -54,12 +56,13 @@
             txtUrl.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             txtUrl.Location = new Point(158, 13);
             txtUrl.Name = "txtUrl";
-            txtUrl.Size = new Size(815, 27);
+            txtUrl.Size = new Size(786, 27);
             txtUrl.TabIndex = 0;
             // 
             // topPanel
             // 
             topPanel.BackColor = Color.MistyRose;
+            topPanel.Controls.Add(pictureBox6);
             topPanel.Controls.Add(pictureBox5);
             topPanel.Controls.Add(pictureBox4);
             topPanel.Controls.Add(pictureBox3);
@@ -78,7 +81,7 @@
             // 
             pictureBox5.Anchor = AnchorStyles.Right;
             pictureBox5.Image = Properties.Resources.star;
-            pictureBox5.Location = new Point(979, 13);
+            pictureBox5.Location = new Point(954, 13);
             pictureBox5.Name = "pictureBox5";
             pictureBox5.Size = new Size(25, 25);
             pictureBox5.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -90,7 +93,7 @@
             // 
             pictureBox4.Anchor = AnchorStyles.Right;
             pictureBox4.Image = (Image)resources.GetObject("pictureBox4.Image");
-            pictureBox4.Location = new Point(1010, 13);
+            pictureBox4.Location = new Point(1016, 13);
             pictureBox4.Name = "pictureBox4";
             pictureBox4.Size = new Size(25, 25);
             pictureBox4.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -142,6 +145,18 @@
             picicon.TabStop = false;
             picicon.Click += picicon_Click;
             // 
+            // pictureBox6
+            // 
+            pictureBox6.Anchor = AnchorStyles.Right;
+            pictureBox6.Image = Properties.Resources.user;
+            pictureBox6.Location = new Point(985, 13);
+            pictureBox6.Name = "pictureBox6";
+            pictureBox6.Size = new Size(25, 25);
+            pictureBox6.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox6.TabIndex = 7;
+            pictureBox6.TabStop = false;
+            pictureBox6.Click += pictureBox6_Click;
+            // 
             // TrinhDuyet
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -163,6 +178,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)picicon).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox6).EndInit();
             ResumeLayout(false);
         }
 
@@ -177,5 +193,6 @@
         private PictureBox pictureBox3;
         private PictureBox pictureBox2;
         private PictureBox pictureBox5;
+        private PictureBox pictureBox6;
     }
 }
