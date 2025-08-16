@@ -87,7 +87,10 @@ namespace TrinhDuyet
             {
                 await webView21.EnsureCoreWebView2Async();
                 if (string.IsNullOrWhiteSpace(url)) return;
-                if (!url.StartsWith("http")) url = "https://" + url;
+                if (!Uri.TryCreate(url, UriKind.Absolute, out Uri uriResult))
+                {
+                    url = "https://" + url;
+                }
                 webView21.Source = new Uri(url);
             }
             catch (Exception ex)
@@ -112,7 +115,12 @@ namespace TrinhDuyet
                 if (string.IsNullOrEmpty(input)) return;
 
                 bool isUrl = Uri.TryCreate(input, UriKind.Absolute, out Uri uriResult)
-                             && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+             && (uriResult.Scheme == Uri.UriSchemeHttp
+                 || uriResult.Scheme == Uri.UriSchemeHttps
+                 || uriResult.Scheme == Uri.UriSchemeFile
+                 || uriResult.Scheme == "edge"
+                 || uriResult.Scheme == "chrome");
+
 
                 if (!isUrl)
                 {
@@ -223,23 +231,81 @@ namespace TrinhDuyet
             Form historyForm = new Form
             {
                 Text = "Lịch sử duyệt web",
-                Size = new Size(600, 400)
+                Size = new Size(600, 400),
+                StartPosition = FormStartPosition.CenterParent
             };
 
-            ListBox listBox = new ListBox { Dock = DockStyle.Fill };
-            listBox.Items.AddRange(history);
-            listBox.DoubleClick += (s, e) =>
+            // Dùng ListView thay cho ListBox
+            ListView listView = new ListView
             {
-                if (listBox.SelectedItem != null)
+                Dock = DockStyle.Fill,
+                View = View.Details,
+                FullRowSelect = true
+            };
+
+            listView.Columns.Add("URL", 500);
+            listView.Columns.Add("", 50);
+
+            foreach (var url in history)
+            {
+                var item = new ListViewItem(url);
+                item.SubItems.Add("⋮");
+                listView.Items.Add(item);
+            }
+
+            // Double click vào URL để mở
+            listView.DoubleClick += (s, e) =>
+            {
+                if (listView.SelectedItems.Count > 0)
                 {
-                    _ = NavigateToUrl(listBox.SelectedItem.ToString());
+                    _ = NavigateToUrl(listView.SelectedItems[0].Text);
                     historyForm.Close();
                 }
             };
 
-            historyForm.Controls.Add(listBox);
+            // Tạo context menu cho nút ⋮
+            ContextMenuStrip menu = new ContextMenuStrip();
+            menu.Items.Add("Sao chép URL", null, (s, e) =>
+            {
+                if (listView.SelectedItems.Count > 0)
+                {
+                    Clipboard.SetText(listView.SelectedItems[0].Text);
+                }
+            });
+            menu.Items.Add("Xóa", null, (s, e) =>
+            {
+                if (listView.SelectedItems.Count > 0)
+                {
+                    listView.Items.Remove(listView.SelectedItems[0]);
+                    File.WriteAllLines("history.txt", listView.Items.Cast<ListViewItem>().Select(i => i.Text));
+                }
+            });
+
+            // Xử lý click vào cột ⋮
+            listView.MouseClick += (s, e) =>
+            {
+                var info = listView.HitTest(e.Location);
+                if (info.Item != null && info.SubItem != null)
+                {
+                    int subItemIndex = info.Item.SubItems.IndexOf(info.SubItem);
+                    if (subItemIndex == 1) // cột ⋮
+                    {
+                        listView.FocusedItem = info.Item;
+                        menu.Show(listView, e.Location);
+                    }
+                }
+            };
+
+            Button btnClose = new Button { Text = "Đóng", Dock = DockStyle.Bottom, Size = new Size(200,33) };
+            btnClose.Click += (s, e) => historyForm.Close();
+
+            historyForm.Controls.Add(listView);
+            historyForm.Controls.Add(btnClose);
+
             historyForm.ShowDialog();
         }
+
+
 
         // ======= FULL SCREEN =======
         private void ToggleFullScreen(bool enable)
