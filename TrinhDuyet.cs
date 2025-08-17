@@ -37,11 +37,32 @@ namespace TrinhDuyet
                 var newForm = new TrinhDuyet("https://www.google.com"); // hoặc truyền URL bạn muốn
                 newForm.Show();
             }
+            if (e.Control && e.KeyCode == Keys.H) { 
+                ShowHistory();
+            }
+            if (e.Control && e.KeyCode == Keys.E)
+            {
+                ToggleBookmark(webView21.Source.ToString());
+            }
+            if (e.Control && e.KeyCode == Keys.W)
+            {
+                e.Handled = true;
+                this.Close(); // hoặc đóng tab hiện tại nếu bạn quản lý nhiều tab
+            }
+            if (e.Control && e.Shift && e.KeyCode == Keys.B)
+            {
+                e.Handled = true;
+                ToggleBar(); // hàm bạn tự tạo để ẩn/hiện thanh bookmark
+            }
             if (e.KeyCode == Keys.F11)
             {
                 ToggleFullScreen();
             }
 
+        }
+        private void ToggleBar()
+        {
+            topPanel.Visible = !topPanel.Visible;
         }
 
         // ======= KHỞI TẠO WEBVIEW =======
@@ -72,7 +93,7 @@ namespace TrinhDuyet
             {
                 UpdateUIAfterNavigation();
             };
-
+            webView21.SourceChanged += WebView21_SourceChanged;
             webView21.CoreWebView2.ContainsFullScreenElementChanged += (sender, args) =>
             {
                 isFullScreen = !webView21.CoreWebView2.ContainsFullScreenElement;
@@ -219,6 +240,11 @@ namespace TrinhDuyet
                 ? Properties.Resources.star_fill
                 : Properties.Resources.star;
             LoadUrlAutoComplete();
+        }
+        private void WebView21_SourceChanged(object sender, CoreWebView2SourceChangedEventArgs e)
+        {
+            txtUrl.Text = webView21.Source?.AbsoluteUri;
+            UpdateUIAfterNavigation();
         }
 
         private void ShowHistory()
