@@ -72,7 +72,7 @@ namespace TrinhDuyet
             {
                 UpdateUIAfterNavigation();
             };
-
+            webView21.SourceChanged += WebView21_SourceChanged;
             webView21.CoreWebView2.ContainsFullScreenElementChanged += (sender, args) =>
             {
                 isFullScreen = !webView21.CoreWebView2.ContainsFullScreenElement;
@@ -219,6 +219,11 @@ namespace TrinhDuyet
                 ? Properties.Resources.star_fill
                 : Properties.Resources.star;
             LoadUrlAutoComplete();
+        }
+        private void WebView21_SourceChanged(object sender, CoreWebView2SourceChangedEventArgs e)
+        {
+            txtUrl.Text = webView21.Source?.AbsoluteUri;
+            UpdateUIAfterNavigation();
         }
 
         private void ShowHistory()
