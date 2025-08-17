@@ -18,6 +18,7 @@ namespace TrinhDuyet
         private bool isLoggedIn = false;
         public TrinhDuyet(string startUrl = "about:blank")
         {
+            this.StartPosition = FormStartPosition.CenterScreen;
             InitializeComponent();
             this.Load += async (s, e) =>
             {
@@ -38,7 +39,7 @@ namespace TrinhDuyet
             }
             if (e.KeyCode == Keys.F11)
             {
-                ToggleFullScreen(this.FormBorderStyle != FormBorderStyle.None);
+                ToggleFullScreen();
             }
 
         }
@@ -74,7 +75,8 @@ namespace TrinhDuyet
 
             webView21.CoreWebView2.ContainsFullScreenElementChanged += (sender, args) =>
             {
-                ToggleFullScreen(webView21.CoreWebView2.ContainsFullScreenElement);
+                isFullScreen = !webView21.CoreWebView2.ContainsFullScreenElement;
+                ToggleFullScreen();
             };
             webView21.CoreWebView2.NewWindowRequested += webView21_NewWindowRequested;
             LoadUrlAutoComplete();
@@ -308,32 +310,51 @@ namespace TrinhDuyet
 
 
         // ======= FULL SCREEN =======
-        private void ToggleFullScreen(bool enable)
-        {
-            if (enable)
-            {
-                topPanel.Visible = false;
+        // Biến lưu trạng thái cũ
+        private FormBorderStyle oldBorderStyle;
+        private FormWindowState oldWindowState;
+        private Rectangle oldBounds;
 
-                // Cho webView chiếm toàn bộ form
+        private bool isFullScreen = false;
+
+        private void ToggleFullScreen()
+        {
+            if (!isFullScreen)
+            {
+                // Lưu trạng thái cũ
+                oldBorderStyle = this.FormBorderStyle;
+                oldWindowState = this.WindowState;
+                oldBounds = this.Bounds;
+
+                // Bật full screen
+                topPanel.Visible = false;
                 webView21.Dock = DockStyle.Fill;
 
                 this.FormBorderStyle = FormBorderStyle.None;
-                this.WindowState = FormWindowState.Maximized;
+                this.WindowState = FormWindowState.Normal;
+                this.Bounds = Screen.PrimaryScreen.Bounds;
+
+                isFullScreen = true;
             }
             else
             {
-                // Hiện lại topPanel
-                topPanel.Visible = true;
+                // Trả lại trạng thái cũ
+                this.FormBorderStyle = oldBorderStyle;
+                this.WindowState = oldWindowState;
+                this.Bounds = oldBounds;
 
-                this.FormBorderStyle = FormBorderStyle.Sizable;
-                this.WindowState = FormWindowState.Normal;
+                topPanel.Visible = true;
+                webView21.Dock = DockStyle.Fill;
+
+                isFullScreen = false;
             }
         }
+
 
         // ======= FORM LOAD =======
         private async void Form1_Load(object sender, EventArgs e)
         {
-            this.WindowState = FormWindowState.Maximized;
+            //this.WindowState = FormWindowState.Maximized;
             LoadBookmarks();
             getLogin();
             string savedUser = loginInfo[0];
@@ -442,7 +463,7 @@ namespace TrinhDuyet
 
             else
             {
-                menu.Items.Add(loginInfo[0], null);
+                menu.Items.Add($"Xin chào!, {loginInfo[0]}", null, (s,ev) => OpenInfoDialog());
                 menu.Items.Add("Đăng xuất", null, (s, ev) => Logout());
             }
             menu.Show(pictureBox6, new Point(0, pictureBox6.Height));
@@ -485,6 +506,10 @@ namespace TrinhDuyet
                 loginInfo[1] = null;
             }
 
+        }
+        private void OpenInfoDialog() { 
+            UserInfo userInfo = new UserInfo();
+            userInfo.ShowDialog();
         }
     }
 }

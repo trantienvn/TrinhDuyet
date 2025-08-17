@@ -21,22 +21,22 @@
             webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
             txtUrl = new TextBox();
             topPanel = new Panel();
+            pictureBox6 = new PictureBox();
             pictureBox5 = new PictureBox();
             pictureBox4 = new PictureBox();
             pictureBox3 = new PictureBox();
             pictureBox2 = new PictureBox();
             pictureBox1 = new PictureBox();
             picicon = new PictureBox();
-            pictureBox6 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)webView21).BeginInit();
             topPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox6).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)picicon).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox6).BeginInit();
             SuspendLayout();
             // 
             // webView21
@@ -47,7 +47,7 @@
             webView21.Dock = DockStyle.Fill;
             webView21.Location = new Point(0, 50);
             webView21.Name = "webView21";
-            webView21.Size = new Size(1053, 475);
+            webView21.Size = new Size(1135, 509);
             webView21.TabIndex = 2;
             webView21.ZoomFactor = 1D;
             // 
@@ -56,7 +56,7 @@
             txtUrl.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             txtUrl.Location = new Point(158, 13);
             txtUrl.Name = "txtUrl";
-            txtUrl.Size = new Size(786, 27);
+            txtUrl.Size = new Size(868, 27);
             txtUrl.TabIndex = 0;
             // 
             // topPanel
@@ -74,14 +74,26 @@
             topPanel.Location = new Point(0, 0);
             topPanel.Name = "topPanel";
             topPanel.Padding = new Padding(10);
-            topPanel.Size = new Size(1053, 50);
+            topPanel.Size = new Size(1135, 50);
             topPanel.TabIndex = 3;
+            // 
+            // pictureBox6
+            // 
+            pictureBox6.Anchor = AnchorStyles.Right;
+            pictureBox6.Image = Properties.Resources.user;
+            pictureBox6.Location = new Point(1067, 13);
+            pictureBox6.Name = "pictureBox6";
+            pictureBox6.Size = new Size(25, 25);
+            pictureBox6.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox6.TabIndex = 7;
+            pictureBox6.TabStop = false;
+            pictureBox6.Click += pictureBox6_Click;
             // 
             // pictureBox5
             // 
             pictureBox5.Anchor = AnchorStyles.Right;
             pictureBox5.Image = Properties.Resources.star;
-            pictureBox5.Location = new Point(954, 13);
+            pictureBox5.Location = new Point(1036, 13);
             pictureBox5.Name = "pictureBox5";
             pictureBox5.Size = new Size(25, 25);
             pictureBox5.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -93,7 +105,7 @@
             // 
             pictureBox4.Anchor = AnchorStyles.Right;
             pictureBox4.Image = (Image)resources.GetObject("pictureBox4.Image");
-            pictureBox4.Location = new Point(1016, 13);
+            pictureBox4.Location = new Point(1098, 13);
             pictureBox4.Name = "pictureBox4";
             pictureBox4.Size = new Size(25, 25);
             pictureBox4.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -145,24 +157,12 @@
             picicon.TabStop = false;
             picicon.Click += picicon_Click;
             // 
-            // pictureBox6
-            // 
-            pictureBox6.Anchor = AnchorStyles.Right;
-            pictureBox6.Image = Properties.Resources.user;
-            pictureBox6.Location = new Point(985, 13);
-            pictureBox6.Name = "pictureBox6";
-            pictureBox6.Size = new Size(25, 25);
-            pictureBox6.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox6.TabIndex = 7;
-            pictureBox6.TabStop = false;
-            pictureBox6.Click += pictureBox6_Click;
-            // 
             // TrinhDuyet
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ButtonHighlight;
-            ClientSize = new Size(1053, 525);
+            ClientSize = new Size(1135, 559);
             Controls.Add(webView21);
             Controls.Add(topPanel);
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -172,13 +172,13 @@
             ((System.ComponentModel.ISupportInitialize)webView21).EndInit();
             topPanel.ResumeLayout(false);
             topPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox6).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox5).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)picicon).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox6).EndInit();
             ResumeLayout(false);
         }
 
