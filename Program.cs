@@ -27,7 +27,7 @@ namespace TrinhDuyet
                 startUrl = args[0]; // Lấy tham số URL đầu tiên
             }
 
-            Application.Run(new TrinhDuyet(startUrl));
+            Application.Run(new MainWebForm(startUrl));
         }
 
         public static CoreWebView2Environment SharedEnv;
@@ -36,8 +36,9 @@ namespace TrinhDuyet
         {
             if (SharedEnv == null)
             {
+                var options = new CoreWebView2EnvironmentOptions("--lang=vi-VN");
                 string userDataFolder = Path.Combine(Application.StartupPath, "WebView2Data");
-                SharedEnv = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
+                SharedEnv = await CoreWebView2Environment.CreateAsync(null, userDataFolder,options);
             }
             return SharedEnv;
         }

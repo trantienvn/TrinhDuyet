@@ -9,14 +9,14 @@ using Microsoft.Web.WebView2.Core;
 
 namespace TrinhDuyet
 {
-    public partial class TrinhDuyet : Form
+    public partial class MainWebForm : Form
     {
         private List<string> historyList = new List<string>();
         private List<string> bookmarks = new List<string>();
         private string[] loginInfo = new string[2];
         private string bookmarkFile = "bookmarks.txt";
         private bool isLoggedIn = false;
-        public TrinhDuyet(string startUrl = "about:blank")
+        public MainWebForm(string startUrl = "about:blank")
         {
             this.StartPosition = FormStartPosition.CenterScreen;
             InitializeComponent();
@@ -26,15 +26,15 @@ namespace TrinhDuyet
                 await NavigateToUrl(startUrl);
             };
             //webView21.KeyPreview = true;
-            webView21.KeyDown += Form1_KeyDown;
+            webView21.KeyDown += MainWebForm_KeyDown;
         }
 
-        private void Form1_KeyDown(object? sender, KeyEventArgs e)
+        private void MainWebForm_KeyDown(object? sender, KeyEventArgs e)
         {
             if (e.Control && e.KeyCode == Keys.N)
             {
                 e.Handled = true;
-                var newForm = new TrinhDuyet("https://www.google.com"); // hoặc truyền URL bạn muốn
+                var newForm = new MainWebForm("https://www.google.com"); // hoặc truyền URL bạn muốn
                 newForm.Show();
             }
             if (e.Control && e.KeyCode == Keys.H) { 
@@ -125,7 +125,7 @@ namespace TrinhDuyet
         {
             e.Handled = true;
             // Mở cửa sổ mới giống hệt form này, nhưng với URL mới
-            var newBrowser = new TrinhDuyet(e.Uri);
+            var newBrowser = new MainWebForm(e.Uri);
             newBrowser.Show();
         }
 
