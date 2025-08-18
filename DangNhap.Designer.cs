@@ -82,7 +82,7 @@
             // chkShowLogin
             // 
             chkShowLogin.AutoSize = true;
-            chkShowLogin.Location = new Point(455, 130);
+            chkShowLogin.Location = new Point(457, 130);
             chkShowLogin.Name = "chkShowLogin";
             chkShowLogin.Size = new Size(127, 24);
             chkShowLogin.TabIndex = 2;
