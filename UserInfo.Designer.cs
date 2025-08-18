@@ -32,51 +32,63 @@ namespace TrinhDuyet
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserInfo));
             tableLayoutPanel1 = new TableLayoutPanel();
-            pictureBox1 = new PictureBox();
+            picture = new PictureBox();
             label1 = new Label();
             label2 = new Label();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)picture).BeginInit();
             SuspendLayout();
             // 
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Dock = DockStyle.Fill;
-            tableLayoutPanel1.RowCount = 3;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 40F)); // ảnh
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 20F)); // label1
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 40F)); // label2
-            tableLayoutPanel1.Controls.Add(pictureBox1, 0, 0);
+            tableLayoutPanel1.Controls.Add(picture, 0, 0);
             tableLayoutPanel1.Controls.Add(label1, 0, 1);
             tableLayoutPanel1.Controls.Add(label2, 0, 2);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 3;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
             tableLayoutPanel1.Size = new Size(722, 404);
+            tableLayoutPanel1.TabIndex = 0;
             // 
-            // pictureBox1
+            // picture
             // 
-            pictureBox1.Anchor = AnchorStyles.None;
-            pictureBox1.Image = Properties.Resources.user;
-            pictureBox1.Size = new Size(125, 118);
-            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox1.TabStop = false;
+            picture.Anchor = AnchorStyles.None;
+            picture.Image = Properties.Resources.user;
+            picture.Location = new Point(298, 18);
+            picture.Name = "picture";
+            picture.Size = new Size(125, 125);
+            picture.SizeMode = PictureBoxSizeMode.StretchImage;
+            picture.TabIndex = 0;
+            picture.TabStop = false;
             // 
             // label1
             // 
             label1.Anchor = AnchorStyles.None;
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.Location = new Point(240, 185);
+            label1.Name = "label1";
+            label1.Size = new Size(241, 31);
+            label1.TabIndex = 1;
             label1.Text = "Xin chào! {username}";
             label1.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // label2
             // 
-            label2.Anchor = AnchorStyles.None;
-            label2.AutoSize = false;
-            label2.TextAlign = ContentAlignment.MiddleCenter;
             label2.Dock = DockStyle.Fill;
             label2.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label2.Location = new Point(3, 241);
+            label2.Name = "label2";
+            label2.Size = new Size(716, 163);
+            label2.TabIndex = 2;
             label2.Text = resources.GetString("label2.Text");
+            label2.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // UserInfo
             // 
@@ -84,10 +96,13 @@ namespace TrinhDuyet
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(722, 404);
             Controls.Add(tableLayoutPanel1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MinimumSize = new Size(722, 404);
             Name = "UserInfo";
             Text = "UserInfo";
-            MinimumSize = new Size(722, 404);
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)picture).EndInit();
             ResumeLayout(false);
         }
 
@@ -95,7 +110,7 @@ namespace TrinhDuyet
         #endregion
 
         private TableLayoutPanel tableLayoutPanel1;
-        private PictureBox pictureBox1;
+        private PictureBox picture;
         private Label label1;
         private Label label2;
     }

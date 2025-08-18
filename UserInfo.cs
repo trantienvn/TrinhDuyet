@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
 
 namespace TrinhDuyet
@@ -13,21 +7,28 @@ namespace TrinhDuyet
     public partial class UserInfo : Form
     {
         public string username = string.Empty;
+
         public UserInfo()
         {
-            this.StartPosition = FormStartPosition.CenterScreen;
-
-            // Không cho thay đổi kích thước
-            //this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
             InitializeComponent();
+
+            // Cài đặt form ở giữa màn hình
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.BackColor = System.Drawing.Color.White; // Màu nền trắng
+
+            // Chỉ giữ nút đóng
+            this.ControlBox = true;
+            this.MaximizeBox = false; // Ẩn nút tối đa
+            this.MinimizeBox = false; // Ẩn nút thu nhỏ
             GetUsername();
             label1.Text = $"Xin chào, {username}";
+            this.Text = username;
         }
+
         private void GetUsername()
         {
             string[] Info = File.ReadAllLines("User.data");
-            if(Info.Length > 0)
+            if (Info.Length > 0)
                 username = Info[0];
         }
     }

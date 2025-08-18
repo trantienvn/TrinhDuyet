@@ -22,7 +22,9 @@ namespace TrinhDuyet
 
             // Không cho thay đổi kích thước
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
+            this.ControlBox = true;
+            this.MaximizeBox = false; // Ẩn nút tối đa
+            this.MinimizeBox = false; // Ẩn nút thu nhỏ
             InitializeComponent();
             this.chkShowLogin.CheckedChanged += (s, e) =>
             {
