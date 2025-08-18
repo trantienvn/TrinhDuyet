@@ -40,7 +40,7 @@ namespace TrinhDuyet
             //mainWebView.KeyPreview = true;
             mainWebView.KeyDown += MainWebForm_KeyDown;
             this.ControlBox = false;
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            //this.FormBorderStyle = FormBorderStyle.FixedSingle;
 
         }
 
