@@ -25,8 +25,8 @@ namespace TrinhDuyet
                 await InitWeb();
                 await NavigateToUrl(startUrl);
             };
-            //webView21.KeyPreview = true;
-            webView21.KeyDown += MainWebForm_KeyDown;
+            //mainWebView.KeyPreview = true;
+            mainWebView.KeyDown += MainWebForm_KeyDown;
         }
 
         private void MainWebForm_KeyDown(object? sender, KeyEventArgs e)
@@ -42,7 +42,7 @@ namespace TrinhDuyet
             }
             if (e.Control && e.KeyCode == Keys.E)
             {
-                ToggleBookmark(webView21.Source.ToString());
+                ToggleBookmark(mainWebView.Source.ToString());
             }
             if (e.Control && e.KeyCode == Keys.W)
             {
@@ -68,17 +68,17 @@ namespace TrinhDuyet
         // ======= KHỞI TẠO WEBVIEW =======
         public async Task InitWeb()
         {
-            if (webView21.CoreWebView2 != null) return;
+            if (mainWebView.CoreWebView2 != null) return;
 
 
             try
             {
                 var env = await Program.GetSharedEnv();
-                await webView21.EnsureCoreWebView2Async(env);
+                await mainWebView.EnsureCoreWebView2Async(env);
             }
             catch (Exception e)
             {
-                await webView21.EnsureCoreWebView2Async();
+                await mainWebView.EnsureCoreWebView2Async();
             }
             txtUrl.KeyDown += (s, e) =>
             {
@@ -89,17 +89,17 @@ namespace TrinhDuyet
                 }
             };
 
-            webView21.NavigationCompleted += (sender, args) =>
+            mainWebView.NavigationCompleted += (sender, args) =>
             {
                 UpdateUIAfterNavigation();
             };
-            webView21.SourceChanged += WebView21_SourceChanged;
-            webView21.CoreWebView2.ContainsFullScreenElementChanged += (sender, args) =>
+            mainWebView.SourceChanged += mainWebView_SourceChanged;
+            mainWebView.CoreWebView2.ContainsFullScreenElementChanged += (sender, args) =>
             {
-                isFullScreen = !webView21.CoreWebView2.ContainsFullScreenElement;
+                isFullScreen = !mainWebView.CoreWebView2.ContainsFullScreenElement;
                 ToggleFullScreen();
             };
-            webView21.CoreWebView2.NewWindowRequested += webView21_NewWindowRequested;
+            mainWebView.CoreWebView2.NewWindowRequested += mainWebView_NewWindowRequested;
             LoadUrlAutoComplete();
         }
 
@@ -108,20 +108,20 @@ namespace TrinhDuyet
         {
             try
             {
-                await webView21.EnsureCoreWebView2Async();
+                await mainWebView.EnsureCoreWebView2Async();
                 if (string.IsNullOrWhiteSpace(url)) return;
                 if (!Uri.TryCreate(url, UriKind.Absolute, out Uri uriResult))
                 {
                     url = "https://" + url;
                 }
-                webView21.Source = new Uri(url);
+                mainWebView.Source = new Uri(url);
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi khi tải trang: " + ex.Message);
             }
         }
-        private void webView21_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e)
+        private void mainWebView_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e)
         {
             e.Handled = true;
             // Mở cửa sổ mới giống hệt form này, nhưng với URL mới
@@ -133,7 +133,7 @@ namespace TrinhDuyet
         {
             try
             {
-                await webView21.EnsureCoreWebView2Async();
+                await mainWebView.EnsureCoreWebView2Async();
                 string input = txtUrl.Text.Trim();
                 if (string.IsNullOrEmpty(input)) return;
 
@@ -154,7 +154,7 @@ namespace TrinhDuyet
                 }
                 else
                 {
-                    webView21.Source = uriResult;
+                    mainWebView.Source = uriResult;
                 }
             }
             catch (Exception ex)
@@ -180,12 +180,12 @@ namespace TrinhDuyet
             if (bookmarks.Contains(url))
             {
                 bookmarks.Remove(url);
-                pictureBox5.Image = Properties.Resources.star;
+                bookmarkIcon.Image = Properties.Resources.star;
             }
             else
             {
                 bookmarks.Insert(0, url);
-                pictureBox5.Image = Properties.Resources.star_fill;
+                bookmarkIcon.Image = Properties.Resources.star_fill;
             }
             SaveBookmarks();
         }
@@ -222,8 +222,8 @@ namespace TrinhDuyet
         // ======= UI & HISTORY =======
         private void UpdateUIAfterNavigation()
         {
-            string currentUrl = webView21.Source.ToString();
-            this.Text = webView21.CoreWebView2.DocumentTitle;
+            string currentUrl = mainWebView.Source.ToString();
+            this.Text = mainWebView.CoreWebView2.DocumentTitle;
             txtUrl.Text = currentUrl;
 
             // Nếu URL đã có trong lịch sử thì xóa khỏi vị trí cũ
@@ -236,14 +236,14 @@ namespace TrinhDuyet
             File.WriteAllLines("history.txt", historyList);
 
 
-            pictureBox5.Image = bookmarks.Contains(currentUrl)
+            bookmarkIcon.Image = bookmarks.Contains(currentUrl)
                 ? Properties.Resources.star_fill
                 : Properties.Resources.star;
             LoadUrlAutoComplete();
         }
-        private void WebView21_SourceChanged(object sender, CoreWebView2SourceChangedEventArgs e)
+        private void mainWebView_SourceChanged(object sender, CoreWebView2SourceChangedEventArgs e)
         {
-            txtUrl.Text = webView21.Source?.AbsoluteUri;
+            txtUrl.Text = mainWebView.Source?.AbsoluteUri;
             UpdateUIAfterNavigation();
         }
 
@@ -354,7 +354,7 @@ namespace TrinhDuyet
 
                 // Bật full screen
                 topPanel.Visible = false;
-                webView21.Dock = DockStyle.Fill;
+                mainWebView.Dock = DockStyle.Fill;
 
                 this.FormBorderStyle = FormBorderStyle.None;
                 this.WindowState = FormWindowState.Normal;
@@ -370,7 +370,7 @@ namespace TrinhDuyet
                 this.Bounds = oldBounds;
 
                 topPanel.Visible = true;
-                webView21.Dock = DockStyle.Fill;
+                mainWebView.Dock = DockStyle.Fill;
 
                 isFullScreen = false;
             }
@@ -378,7 +378,7 @@ namespace TrinhDuyet
 
 
         // ======= FORM LOAD =======
-        private async void Form1_Load(object sender, EventArgs e)
+        private async void MainWebForm_Load(object sender, EventArgs e)
         {
             //this.WindowState = FormWindowState.Maximized;
             LoadBookmarks();
@@ -391,7 +391,7 @@ namespace TrinhDuyet
                 var store = new UserStore("users.db");
                 if (store.Login(savedUser, savedPass, out var err))
                 {
-                    pictureBox6.Image = Properties.Resources.loggedin;
+                    userIcon.Image = Properties.Resources.loggedin;
                     isLoggedIn = true;
                 }
             }
@@ -438,34 +438,34 @@ namespace TrinhDuyet
 
 
         // ======= ICONS EVENTS =======
-        private async void picicon_Click(object sender, EventArgs e)
+        private async void homeIcon_Click(object sender, EventArgs e)
         {
             await NavigateToUrl("https://www.google.com.vn");
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e) => webView21.Reload();
-        private void pictureBox2_Click(object sender, EventArgs e) { if (webView21.CanGoForward) webView21.GoForward(); }
-        private void pictureBox3_Click(object sender, EventArgs e) { if (webView21.CanGoBack) webView21.GoBack(); }
-        private void pictureBox5_Click(object sender, EventArgs e) => ToggleBookmark(webView21.Source.ToString());
+        private void reloadBtn_Click(object sender, EventArgs e) => mainWebView.Reload();
+        private void forwardBtn_Click(object sender, EventArgs e) { if (mainWebView.CanGoForward) mainWebView.GoForward(); }
+        private void backBtn_Click(object sender, EventArgs e) { if (mainWebView.CanGoBack) mainWebView.GoBack(); }
+        private void bookmarkIcon_Click(object sender, EventArgs e) => ToggleBookmark(mainWebView.Source.ToString());
 
-        private void pictureBox4_Click(object sender, EventArgs e)
+        private void menuBtn_Click(object sender, EventArgs e)
         {
             ContextMenuStrip menu = new ContextMenuStrip();
 
-            var backItem = new ToolStripMenuItem("Quay lại", null, (s, ev) => { if (webView21.CanGoBack) webView21.GoBack(); })
-            { Enabled = webView21.CanGoBack };
+            var backItem = new ToolStripMenuItem("Quay lại", null, (s, ev) => { if (mainWebView.CanGoBack) mainWebView.GoBack(); })
+            { Enabled = mainWebView.CanGoBack };
             menu.Items.Add(backItem);
 
-            var forwardItem = new ToolStripMenuItem("Tiến tới", null, (s, ev) => { if (webView21.CanGoForward) webView21.GoForward(); })
-            { Enabled = webView21.CanGoForward };
+            var forwardItem = new ToolStripMenuItem("Tiến tới", null, (s, ev) => { if (mainWebView.CanGoForward) mainWebView.GoForward(); })
+            { Enabled = mainWebView.CanGoForward };
             menu.Items.Add(forwardItem);
 
-            menu.Items.Add("Tải lại", null, (s, ev) => webView21.Reload());
+            menu.Items.Add("Tải lại", null, (s, ev) => mainWebView.Reload());
             menu.Items.Add(new ToolStripSeparator());
 
             menu.Items.Add("Chia sẻ liên kết", null, (s, ev) =>
             {
-                Clipboard.SetText(webView21.Source.ToString());
+                Clipboard.SetText(mainWebView.Source.ToString());
                 MessageBox.Show("Đã sao chép liên kết!", "Share", MessageBoxButtons.OK, MessageBoxIcon.Information);
             });
 
@@ -475,10 +475,10 @@ namespace TrinhDuyet
             menu.Items.Add(new ToolStripSeparator());
             menu.Items.Add("Trang chủ", null, (s, ev) => _ = NavigateToUrl("https://www.google.com"));
 
-            menu.Show(pictureBox4, new Point(0, pictureBox4.Height));
+            menu.Show(menuBtn, new Point(0, menuBtn.Height));
         }
 
-        private void pictureBox6_Click(object sender, EventArgs e)
+        private void userIcon_Click(object sender, EventArgs e)
         {
             ContextMenuStrip menu = new ContextMenuStrip();
             if (!isLoggedIn)
@@ -492,7 +492,7 @@ namespace TrinhDuyet
                 menu.Items.Add($"Xin chào!, {loginInfo[0]}", null, (s,ev) => OpenInfoDialog());
                 menu.Items.Add("Đăng xuất", null, (s, ev) => Logout());
             }
-            menu.Show(pictureBox6, new Point(0, pictureBox6.Height));
+            menu.Show(userIcon, new Point(0, userIcon.Height));
         }
         private void Login()
         {
@@ -501,7 +501,7 @@ namespace TrinhDuyet
             var result = dn.ShowDialog();
             if (result == DialogResult.OK)
             {
-                pictureBox6.Image = Properties.Resources.loggedin;
+                userIcon.Image = Properties.Resources.loggedin;
                 isLoggedIn = true;
                 string filePath = "User.data";
                 // Ví dụ: dn.Username và dn.Password là thông tin từ form đăng nhập
@@ -512,7 +512,7 @@ namespace TrinhDuyet
         private void Logout()
         {
             isLoggedIn = false;
-            pictureBox6.Image = Properties.Resources.user;
+            userIcon.Image = Properties.Resources.user;
             string filePath = "User.data";
             if (File.Exists(filePath))
             {

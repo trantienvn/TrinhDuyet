@@ -66,6 +66,7 @@
             // 
             // tabLogin
             // 
+            tabLogin.BackColor = Color.FromArgb(255, 192, 192);
             tabLogin.Controls.Add(chkShowLogin);
             tabLogin.Controls.Add(btnLogin);
             tabLogin.Controls.Add(txtLoginPass);
@@ -131,6 +132,7 @@
             // 
             // tabRegister
             // 
+            tabRegister.BackColor = Color.FromArgb(255, 192, 192);
             tabRegister.Controls.Add(chkShowReg);
             tabRegister.Controls.Add(btnRegister);
             tabRegister.Controls.Add(txtRegPass2);
@@ -141,7 +143,7 @@
             tabRegister.Controls.Add(lblRP2);
             tabRegister.Location = new Point(4, 29);
             tabRegister.Name = "tabRegister";
-            tabRegister.Size = new Size(710, 357);
+            tabRegister.Size = new Size(709, 357);
             tabRegister.TabIndex = 1;
             tabRegister.Text = "Đăng ký";
             // 

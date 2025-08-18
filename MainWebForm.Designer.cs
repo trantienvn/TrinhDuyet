@@ -18,41 +18,42 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWebForm));
-            webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
+            mainWebView = new Microsoft.Web.WebView2.WinForms.WebView2();
             txtUrl = new TextBox();
             topPanel = new Panel();
-            pictureBox6 = new PictureBox();
-            pictureBox5 = new PictureBox();
-            pictureBox4 = new PictureBox();
-            pictureBox3 = new PictureBox();
-            pictureBox2 = new PictureBox();
-            pictureBox1 = new PictureBox();
-            picicon = new PictureBox();
-            ((System.ComponentModel.ISupportInitialize)webView21).BeginInit();
+            userIcon = new PictureBox();
+            bookmarkIcon = new PictureBox();
+            menuBtn = new PictureBox();
+            backBtn = new PictureBox();
+            forwardBtn = new PictureBox();
+            reloadBtn = new PictureBox();
+            homeIcon = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)mainWebView).BeginInit();
             topPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox6).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)picicon).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)userIcon).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bookmarkIcon).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)menuBtn).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)backBtn).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)forwardBtn).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)reloadBtn).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)homeIcon).BeginInit();
             SuspendLayout();
             // 
-            // webView21
+            // mainWebView
             // 
-            webView21.AllowExternalDrop = true;
-            webView21.CreationProperties = null;
-            webView21.DefaultBackgroundColor = Color.White;
-            webView21.Dock = DockStyle.Fill;
-            webView21.Location = new Point(0, 50);
-            webView21.Name = "webView21";
-            webView21.Size = new Size(1135, 509);
-            webView21.TabIndex = 2;
-            webView21.ZoomFactor = 1D;
+            mainWebView.AllowExternalDrop = true;
+            mainWebView.CreationProperties = null;
+            mainWebView.DefaultBackgroundColor = Color.White;
+            mainWebView.Dock = DockStyle.Fill;
+            mainWebView.Location = new Point(0, 50);
+            mainWebView.Name = "mainWebView";
+            mainWebView.Size = new Size(1135, 509);
+            mainWebView.TabIndex = 2;
+            mainWebView.ZoomFactor = 1D;
             // 
             // txtUrl
             // 
+           
             txtUrl.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             txtUrl.Location = new Point(158, 13);
             txtUrl.Name = "txtUrl";
@@ -62,13 +63,13 @@
             // topPanel
             // 
             topPanel.BackColor = Color.MistyRose;
-            topPanel.Controls.Add(pictureBox6);
-            topPanel.Controls.Add(pictureBox5);
-            topPanel.Controls.Add(pictureBox4);
-            topPanel.Controls.Add(pictureBox3);
-            topPanel.Controls.Add(pictureBox2);
-            topPanel.Controls.Add(pictureBox1);
-            topPanel.Controls.Add(picicon);
+            topPanel.Controls.Add(userIcon);
+            topPanel.Controls.Add(bookmarkIcon);
+            topPanel.Controls.Add(menuBtn);
+            topPanel.Controls.Add(backBtn);
+            topPanel.Controls.Add(forwardBtn);
+            topPanel.Controls.Add(reloadBtn);
+            topPanel.Controls.Add(homeIcon);
             topPanel.Controls.Add(txtUrl);
             topPanel.Dock = DockStyle.Top;
             topPanel.Location = new Point(0, 0);
@@ -77,122 +78,126 @@
             topPanel.Size = new Size(1135, 50);
             topPanel.TabIndex = 3;
             // 
-            // pictureBox6
+            // userIcon
             // 
-            pictureBox6.Anchor = AnchorStyles.Right;
-            pictureBox6.Image = Properties.Resources.user;
-            pictureBox6.Location = new Point(1067, 13);
-            pictureBox6.Name = "pictureBox6";
-            pictureBox6.Size = new Size(25, 25);
-            pictureBox6.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox6.TabIndex = 7;
-            pictureBox6.TabStop = false;
-            pictureBox6.Click += pictureBox6_Click;
+            userIcon.Anchor = AnchorStyles.Right;
+            userIcon.Image = Properties.Resources.user;
+            userIcon.Location = new Point(1067, 13);
+            userIcon.Name = "userIcon";
+            userIcon.Size = new Size(25, 25);
+            userIcon.SizeMode = PictureBoxSizeMode.StretchImage;
+            userIcon.TabIndex = 7;
+            userIcon.TabStop = false;
+            userIcon.Click += userIcon_Click;
             // 
-            // pictureBox5
+            // bookmarkIcon
             // 
-            pictureBox5.Anchor = AnchorStyles.Right;
-            pictureBox5.Image = Properties.Resources.star;
-            pictureBox5.Location = new Point(1036, 13);
-            pictureBox5.Name = "pictureBox5";
-            pictureBox5.Size = new Size(25, 25);
-            pictureBox5.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox5.TabIndex = 6;
-            pictureBox5.TabStop = false;
-            pictureBox5.Click += pictureBox5_Click;
+            bookmarkIcon.Anchor = AnchorStyles.Right;
+            bookmarkIcon.Image = Properties.Resources.star;
+            bookmarkIcon.Location = new Point(1036, 13);
+            bookmarkIcon.Name = "bookmarkIcon";
+            bookmarkIcon.Size = new Size(25, 25);
+            bookmarkIcon.SizeMode = PictureBoxSizeMode.StretchImage;
+            bookmarkIcon.TabIndex = 6;
+            bookmarkIcon.TabStop = false;
+            bookmarkIcon.Click += bookmarkIcon_Click;
             // 
-            // pictureBox4
+            // menuBtn
             // 
-            pictureBox4.Anchor = AnchorStyles.Right;
-            pictureBox4.Image = (Image)resources.GetObject("pictureBox4.Image");
-            pictureBox4.Location = new Point(1098, 13);
-            pictureBox4.Name = "pictureBox4";
-            pictureBox4.Size = new Size(25, 25);
-            pictureBox4.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox4.TabIndex = 5;
-            pictureBox4.TabStop = false;
-            pictureBox4.Click += pictureBox4_Click;
+            menuBtn.Anchor = AnchorStyles.Right;
+            menuBtn.Image = (Image)resources.GetObject("menuBtn.Image");
+            menuBtn.Location = new Point(1098, 13);
+            menuBtn.Name = "menuBtn";
+            menuBtn.Size = new Size(25, 25);
+            menuBtn.SizeMode = PictureBoxSizeMode.StretchImage;
+            menuBtn.TabIndex = 5;
+            menuBtn.TabStop = false;
+            menuBtn.Click += menuBtn_Click;
             // 
-            // pictureBox3
+            // backBtn
             // 
-            pictureBox3.Image = (Image)resources.GetObject("pictureBox3.Image");
-            pictureBox3.Location = new Point(12, 13);
-            pictureBox3.Name = "pictureBox3";
-            pictureBox3.Size = new Size(25, 25);
-            pictureBox3.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox3.TabIndex = 4;
-            pictureBox3.TabStop = false;
-            pictureBox3.Click += pictureBox3_Click;
+            backBtn.Anchor = AnchorStyles.Left;
+            backBtn.Image = (Image)resources.GetObject("backBtn.Image");
+            backBtn.Location = new Point(12, 13);
+            backBtn.Name = "backBtn";
+            backBtn.Size = new Size(25, 25);
+            backBtn.SizeMode = PictureBoxSizeMode.StretchImage;
+            backBtn.TabIndex = 4;
+            backBtn.TabStop = false;
+            backBtn.Click += backBtn_Click;
             // 
-            // pictureBox2
+            // forwardBtn
             // 
-            pictureBox2.Image = (Image)resources.GetObject("pictureBox2.Image");
-            pictureBox2.Location = new Point(42, 13);
-            pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(25, 25);
-            pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox2.TabIndex = 3;
-            pictureBox2.TabStop = false;
-            pictureBox2.Click += pictureBox2_Click;
+            forwardBtn.Anchor = AnchorStyles.Left;
+            forwardBtn.Image = (Image)resources.GetObject("forwardBtn.Image");
+            forwardBtn.Location = new Point(42, 13);
+            forwardBtn.Name = "forwardBtn";
+            forwardBtn.Size = new Size(25, 25);
+            forwardBtn.SizeMode = PictureBoxSizeMode.StretchImage;
+            forwardBtn.TabIndex = 3;
+            forwardBtn.TabStop = false;
+            forwardBtn.Click += forwardBtn_Click;
             // 
-            // pictureBox1
+            // reloadBtn
             // 
-            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(82, 13);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(25, 25);
-            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox1.TabIndex = 2;
-            pictureBox1.TabStop = false;
-            pictureBox1.Click += pictureBox1_Click;
+            reloadBtn.Anchor = AnchorStyles.Left;
+            reloadBtn.Image = (Image)resources.GetObject("reloadBtn.Image");
+            reloadBtn.Location = new Point(82, 13);
+            reloadBtn.Name = "reloadBtn";
+            reloadBtn.Size = new Size(25, 25);
+            reloadBtn.SizeMode = PictureBoxSizeMode.StretchImage;
+            reloadBtn.TabIndex = 2;
+            reloadBtn.TabStop = false;
+            reloadBtn.Click += reloadBtn_Click;
             // 
-            // picicon
+            // homeIcon
             // 
-            picicon.Image = (Image)resources.GetObject("picicon.Image");
-            picicon.Location = new Point(117, 13);
-            picicon.Name = "picicon";
-            picicon.Size = new Size(25, 25);
-            picicon.SizeMode = PictureBoxSizeMode.StretchImage;
-            picicon.TabIndex = 1;
-            picicon.TabStop = false;
-            picicon.Click += picicon_Click;
+            homeIcon.Anchor = AnchorStyles.Left;
+            homeIcon.Image = (Image)resources.GetObject("homeIcon.Image");
+            homeIcon.Location = new Point(117, 13);
+            homeIcon.Name = "homeIcon";
+            homeIcon.Size = new Size(25, 25);
+            homeIcon.SizeMode = PictureBoxSizeMode.StretchImage;
+            homeIcon.TabIndex = 1;
+            homeIcon.TabStop = false;
+            homeIcon.Click += homeIcon_Click;
             // 
-            // TrinhDuyet
+            // MainWebForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ButtonHighlight;
             ClientSize = new Size(1135, 559);
-            Controls.Add(webView21);
+            Controls.Add(mainWebView);
             Controls.Add(topPanel);
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Name = "TrinhDuyet";
+            Name = "MainWebForm";
             Text = "Trình Duyệt";
-            Load += Form1_Load;
-            ((System.ComponentModel.ISupportInitialize)webView21).EndInit();
+            Load += MainWebForm_Load;
+            ((System.ComponentModel.ISupportInitialize)mainWebView).EndInit();
             topPanel.ResumeLayout(false);
             topPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox6).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox5).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)picicon).EndInit();
+            ((System.ComponentModel.ISupportInitialize)userIcon).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bookmarkIcon).EndInit();
+            ((System.ComponentModel.ISupportInitialize)menuBtn).EndInit();
+            ((System.ComponentModel.ISupportInitialize)backBtn).EndInit();
+            ((System.ComponentModel.ISupportInitialize)forwardBtn).EndInit();
+            ((System.ComponentModel.ISupportInitialize)reloadBtn).EndInit();
+            ((System.ComponentModel.ISupportInitialize)homeIcon).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private Microsoft.Web.WebView2.WinForms.WebView2 webView21;
+        private Microsoft.Web.WebView2.WinForms.WebView2 mainWebView;
         private System.Windows.Forms.TextBox txtUrl;
         private System.Windows.Forms.Panel topPanel;
-        private PictureBox picicon;
-        private PictureBox pictureBox1;
-        private PictureBox pictureBox4;
-        private PictureBox pictureBox3;
-        private PictureBox pictureBox2;
-        private PictureBox pictureBox5;
-        private PictureBox pictureBox6;
+        private PictureBox homeIcon;
+        private PictureBox reloadBtn;
+        private PictureBox menuBtn;
+        private PictureBox backBtn;
+        private PictureBox forwardBtn;
+        private PictureBox bookmarkIcon;
+        private PictureBox userIcon;
     }
 }
