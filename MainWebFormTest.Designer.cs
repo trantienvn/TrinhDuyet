@@ -21,6 +21,7 @@
             mainWebView = new Microsoft.Web.WebView2.WinForms.WebView2();
             txtUrl = new TextBox();
             topPanel = new Panel();
+            tittleTxt = new Label();
             appicon = new PictureBox();
             userIcon = new PictureBox();
             bookmarkIcon = new PictureBox();
@@ -32,7 +33,6 @@
             forwardBtn = new PictureBox();
             reloadBtn = new PictureBox();
             homeIcon = new PictureBox();
-            tittleTxt = new Label();
             ((System.ComponentModel.ISupportInitialize)mainWebView).BeginInit();
             topPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)appicon).BeginInit();
@@ -93,6 +93,15 @@
             topPanel.DoubleClick += pannel_DoubleClick;
             topPanel.MouseDown += pannel_MouseDown;
             // 
+            // tittleTxt
+            // 
+            tittleTxt.AutoSize = true;
+            tittleTxt.Location = new Point(44, 16);
+            tittleTxt.Name = "tittleTxt";
+            tittleTxt.Size = new Size(84, 20);
+            tittleTxt.TabIndex = 9;
+            tittleTxt.Text = "Trình Duyệt";
+            // 
             // appicon
             // 
             appicon.Image = (Image)resources.GetObject("appicon.Image");
@@ -131,7 +140,7 @@
             // 
             minisize.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             minisize.Image = Properties.Resources.mini;
-            minisize.Location = new Point(1001, 4);
+            minisize.Location = new Point(1001, 2);
             minisize.Name = "minisize";
             minisize.Size = new Size(32, 32);
             minisize.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -145,7 +154,7 @@
             // 
             maxmize.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             maxmize.Image = Properties.Resources.max;
-            maxmize.Location = new Point(1043, 4);
+            maxmize.Location = new Point(1043, 2);
             maxmize.Name = "maxmize";
             maxmize.Size = new Size(36, 32);
             maxmize.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -159,7 +168,7 @@
             // 
             close.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             close.Image = Properties.Resources.close;
-            close.Location = new Point(1090, 4);
+            close.Location = new Point(1090, 2);
             close.Name = "close";
             close.Size = new Size(32, 32);
             close.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -228,15 +237,6 @@
             homeIcon.TabIndex = 1;
             homeIcon.TabStop = false;
             homeIcon.Click += homeIcon_Click;
-            // 
-            // tittleTxt
-            // 
-            tittleTxt.AutoSize = true;
-            tittleTxt.Location = new Point(44, 16);
-            tittleTxt.Name = "tittleTxt";
-            tittleTxt.Size = new Size(84, 20);
-            tittleTxt.TabIndex = 9;
-            tittleTxt.Text = "Trình Duyệt";
             // 
             // MainWebFormTest
             // 
