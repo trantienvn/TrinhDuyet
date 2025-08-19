@@ -36,7 +36,7 @@ namespace TrinhDuyet
         {
             if (SharedEnv == null)
             {
-                var options = new CoreWebView2EnvironmentOptions("--lang=vi-VN");
+                var options = new CoreWebView2EnvironmentOptions("--lang=vi-VN --disable-translate");
                 string userDataFolder = Path.Combine(Application.StartupPath, "WebView2Data");
                 SharedEnv = await CoreWebView2Environment.CreateAsync(null, userDataFolder,options);
             }
