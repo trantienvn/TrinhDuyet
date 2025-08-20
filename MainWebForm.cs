@@ -16,6 +16,9 @@ namespace TrinhDuyet
         private string[] loginInfo = new string[2];
         private string bookmarkFile = "bookmarks.txt";
         private bool isLoggedIn = false;
+        private string currentUrlTxt = "";
+        private string lastSearchKeyword = "";
+        private bool isSearch = false;
         public MainWebForm(string startUrl = "about:blank")
         {
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -27,6 +30,57 @@ namespace TrinhDuyet
             };
             //mainWebView.KeyPreview = true;
             mainWebView.KeyDown += MainWebForm_KeyDown;
+            // this.ControlBox = false;
+            //this.FormBorderStyle = FormBorderStyle.FixedSingle;
+
+        }
+        private string HideProtocol(string url)
+        {
+            string result = url;
+
+            // Bước 1: Ẩn "https://" hoặc "http://"
+            if (result.StartsWith("https://"))
+            {
+                result = result.Substring(8);
+            }
+            else if (result.StartsWith("http://"))
+            {
+                result = result.Substring(7);
+            }
+
+            // Bước 2: Ẩn "www." nếu có
+            if (result.StartsWith("www."))
+            {
+                result = result.Substring(4);
+            }
+            result = result.TrimEnd('/');
+
+            return result;
+        }
+        private void txtUrl_LostFocus(object sender, EventArgs e)
+        {
+            if (!isSearch && !string.IsNullOrEmpty(currentUrlTxt))
+            {
+                txtUrl.Text = HideProtocol(currentUrlTxt);
+            }
+            else if (isSearch)
+            {
+                txtUrl.Text = lastSearchKeyword;
+            }
+        }
+
+        // Hiện full URL khi focus
+        private void txtUrl_GotFocus(object sender, EventArgs e)
+        {
+            if (!isSearch)
+            {
+                txtUrl.Text = currentUrlTxt;
+                txtUrl.SelectAll();
+            }
+            else
+            {
+                txtUrl.SelectAll();
+            }
         }
 
         private void MainWebForm_KeyDown(object? sender, KeyEventArgs e)
@@ -80,6 +134,8 @@ namespace TrinhDuyet
             {
                 await mainWebView.EnsureCoreWebView2Async();
             }
+            txtUrl.GotFocus += txtUrl_GotFocus;
+            txtUrl.LostFocus += txtUrl_LostFocus;
             txtUrl.KeyDown += (s, e) =>
             {
                 if (e.KeyCode == Keys.Enter)
@@ -148,12 +204,19 @@ namespace TrinhDuyet
                 if (!isUrl)
                 {
                     if (!input.Contains(".") || input.Contains(" "))
+                    {
+                        lastSearchKeyword = input;
+                        isSearch = true;
                         await NavigateToUrl("https://www.google.com/search?q=" + Uri.EscapeDataString(input));
-                    else
+                    }
+                    else { 
+                        isSearch = false;
                         await NavigateToUrl(input);
+                }
                 }
                 else
                 {
+                    isSearch = false;
                     mainWebView.Source = uriResult;
                 }
             }
@@ -224,8 +287,16 @@ namespace TrinhDuyet
         {
             string currentUrl = mainWebView.Source.ToString();
             this.Text = mainWebView.CoreWebView2.DocumentTitle;
-            txtUrl.Text = currentUrl;
-
+            // txtUrl.Text = currentUrl;
+            if (isSearch)
+            {
+                txtUrl.Text = lastSearchKeyword;
+            }
+            else
+            {
+                txtUrl.Text = HideProtocol(currentUrl);
+            }
+            currentUrlTxt = currentUrl;
             // Nếu URL đã có trong lịch sử thì xóa khỏi vị trí cũ
             historyList.Remove(currentUrl);
 

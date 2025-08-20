@@ -26,8 +26,8 @@ namespace TrinhDuyet
             {
                 startUrl = args[0]; // Lấy tham số URL đầu tiên
             }
-
-            Application.Run(new MainWebFormTest(startUrl));
+    
+            Application.Run(new MainWebForm(startUrl));
         }
 
         public static CoreWebView2Environment SharedEnv;
