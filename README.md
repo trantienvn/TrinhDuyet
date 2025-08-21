@@ -18,17 +18,14 @@
 ## 📑 Mục lục
 
 - [📖 Giới thiệu](#-giới-thiệu)
-- [✨ Tính năng](#-tính-năng)
+- [✨ Tính năng](#-tính-năng-chính)
 - [🖼️ Giao diện](#️-giao-diện)
 - [🛠️ Công nghệ sử dụng](#-công-nghệ-sử-dụng)
 - [🚀 Hướng dẫn chạy](#-hướng-dẫn-chạy)
 - [📁 Cấu trúc dự án](#-cấu-trúc-dự-án)
-- [⚙️ Cấu hình](#️-cấu-hình)
-- [🧪 Kiểm thử](#-kiểm-thử)
-- [📄 Giấy phép](#-giấy-phép)
 - [🙏 Ghi nhận](#-ghi-nhận)
 - [📞 Hỗ trợ](#-hỗ-trợ)
-- [📌 Phân công công việc nhóm](#-phân-công-công-việc)
+- [📌 Phân công công việc nhóm](#-phân-công-công-việc-nhóm)
 
 ---
 
@@ -135,7 +132,7 @@ TrinhDuyet/
 
 ---
 
-## 📌 Phân Công Công Việc – Bài Tập Nhóm WinForms
+## 📌 Phân Công Công Việc Nhóm
 
 | Thành viên         | Nhiệm vụ                                                             |
 | ------------------ | -------------------------------------------------------------------- |
