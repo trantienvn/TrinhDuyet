@@ -60,7 +60,14 @@
 
 ## 🖼️ Giao diện
 
-> **📌 TODO:** Thêm hình ảnh màn hình giao diện ở đây (bạn có thể chụp lại và upload)
+### 🌐 Trang chủ (Google)
+![Trang chủ](Screenshot/img1.png)
+
+### 🔎 Tìm kiếm với Google
+![Tìm kiếm](Screenshot/img2.png)
+
+### 📑 Gợi ý URL khi nhập
+![Gợi ý URL](Screenshot/img3.png)
 
 ---
 
