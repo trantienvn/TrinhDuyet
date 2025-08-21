@@ -103,17 +103,17 @@ git clone https://github.com/trantienvn/TrinhDuyet.git
 
 ```plaintext
 TrinhDuyet/
-├── DangNhap.cs             // Form đăng nhập
-├── MainWebForm.cs          // Form chính của trình duyệt
-├── MainWebFormTest.cs      // File test MainWebForm
-├── UserInfo.cs             // Hiển thị thông tin người dùng
-├── UserStore.cs            // Lưu dữ liệu người dùng
-├── Program.cs              // Điểm vào ứng dụng
-├── Resources/              // Tài nguyên
-├── Properties/             // Cấu hình project
-├── TrinhDuyet.csproj       // File cấu hình project
-├── TrinhDuyet.sln          // File solution
-├── LICENSE
+├── DangNhap.cs          // Form đăng nhập
+├── MainWebForm.cs       // Form trình duyệt chính
+├── Program.cs           // Điểm khởi chạy ứng dụng
+├── Properties/          // Thuộc tính dự án
+├── Resources/           // Tài nguyên ứng dụng
+├── Screenshot/          // Ảnh chụp màn hình
+├── TrinhDuyet.csproj    // Tập tin dự án
+├── TrinhDuyet.sln       // Tập tin solution
+├── UserInfo.cs          // Lớp thông tin người dùng
+├── UserStore.cs         // Lớp lưu trữ dữ liệu người dùng
+├── app_icon.ico         // Biểu tượng ứng dụng
 └── README.md
 ```
 
