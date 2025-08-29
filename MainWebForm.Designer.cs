@@ -53,11 +53,11 @@
             // 
             // txtUrl
             // 
-           
             txtUrl.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            txtUrl.Location = new Point(158, 13);
+            txtUrl.Font = new Font("Segoe UI", 12F);
+            txtUrl.Location = new Point(158, 9);
             txtUrl.Name = "txtUrl";
-            txtUrl.Size = new Size(868, 27);
+            txtUrl.Size = new Size(868, 34);
             txtUrl.TabIndex = 0;
             // 
             // topPanel
