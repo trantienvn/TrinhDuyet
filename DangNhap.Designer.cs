@@ -31,6 +31,7 @@
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DangNhap));
             tabControl = new TabControl();
             tabLogin = new TabPage();
             chkShowLogin = new CheckBox();
@@ -67,6 +68,8 @@
             // tabLogin
             // 
             tabLogin.BackColor = Color.FromArgb(255, 192, 192);
+            tabLogin.BackgroundImage = (Image)resources.GetObject("tabLogin.BackgroundImage");
+            tabLogin.BackgroundImageLayout = ImageLayout.Stretch;
             tabLogin.Controls.Add(chkShowLogin);
             tabLogin.Controls.Add(btnLogin);
             tabLogin.Controls.Add(txtLoginPass);
@@ -82,11 +85,14 @@
             // chkShowLogin
             // 
             chkShowLogin.AutoSize = true;
-            chkShowLogin.Location = new Point(457, 130);
+            chkShowLogin.BackColor = Color.FromArgb(0, 0, 0, 0);
+            chkShowLogin.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            chkShowLogin.Location = new Point(455, 129);
             chkShowLogin.Name = "chkShowLogin";
-            chkShowLogin.Size = new Size(127, 24);
+            chkShowLogin.Size = new Size(146, 27);
             chkShowLogin.TabIndex = 2;
             chkShowLogin.Text = "Hiện mật khẩu";
+            chkShowLogin.UseVisualStyleBackColor = false;
             // 
             // btnLogin
             // 
@@ -115,18 +121,22 @@
             // lblLU
             // 
             lblLU.AutoSize = true;
-            lblLU.Location = new Point(169, 90);
+            lblLU.BackColor = Color.FromArgb(0, 0, 0, 0);
+            lblLU.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblLU.Location = new Point(156, 91);
             lblLU.Name = "lblLU";
-            lblLU.Size = new Size(74, 20);
+            lblLU.Size = new Size(87, 23);
             lblLU.TabIndex = 4;
             lblLU.Text = "Tài khoản:";
             // 
             // lblLP
             // 
             lblLP.AutoSize = true;
-            lblLP.Location = new Point(169, 130);
+            lblLP.BackColor = Color.FromArgb(0, 0, 0, 0);
+            lblLP.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblLP.Location = new Point(155, 128);
             lblLP.Name = "lblLP";
-            lblLP.Size = new Size(73, 20);
+            lblLP.Size = new Size(88, 23);
             lblLP.TabIndex = 5;
             lblLP.Text = "Mật khẩu:";
             // 
