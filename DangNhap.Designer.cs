@@ -34,6 +34,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DangNhap));
             tabControl = new TabControl();
             tabLogin = new TabPage();
+            pictureBox1 = new PictureBox();
             chkShowLogin = new CheckBox();
             btnLogin = new Button();
             txtLoginPass = new TextBox();
@@ -49,9 +50,12 @@
             lblRU = new Label();
             lblRP = new Label();
             lblRP2 = new Label();
+            pictureBox2 = new PictureBox();
             tabControl.SuspendLayout();
             tabLogin.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabRegister.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             SuspendLayout();
             // 
             // tabControl
@@ -70,6 +74,7 @@
             tabLogin.BackColor = Color.FromArgb(255, 192, 192);
             tabLogin.BackgroundImage = (Image)resources.GetObject("tabLogin.BackgroundImage");
             tabLogin.BackgroundImageLayout = ImageLayout.Stretch;
+            tabLogin.Controls.Add(pictureBox1);
             tabLogin.Controls.Add(chkShowLogin);
             tabLogin.Controls.Add(btnLogin);
             tabLogin.Controls.Add(txtLoginPass);
@@ -81,6 +86,17 @@
             tabLogin.Size = new Size(709, 357);
             tabLogin.TabIndex = 0;
             tabLogin.Text = "Đăng nhập";
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.BackColor = Color.FromArgb(0, 0, 0, 0);
+            pictureBox1.BackgroundImage = (Image)resources.GetObject("pictureBox1.BackgroundImage");
+            pictureBox1.BackgroundImageLayout = ImageLayout.Stretch;
+            pictureBox1.Location = new Point(25, 72);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(125, 129);
+            pictureBox1.TabIndex = 6;
+            pictureBox1.TabStop = false;
             // 
             // chkShowLogin
             // 
@@ -96,11 +112,13 @@
             // 
             // btnLogin
             // 
+            btnLogin.BackColor = Color.NavajoWhite;
             btnLogin.Location = new Point(249, 180);
             btnLogin.Name = "btnLogin";
             btnLogin.Size = new Size(200, 33);
             btnLogin.TabIndex = 3;
             btnLogin.Text = "Đăng nhập";
+            btnLogin.UseVisualStyleBackColor = false;
             btnLogin.Click += BtnLogin_Click;
             // 
             // txtLoginPass
@@ -142,7 +160,10 @@
             // 
             // tabRegister
             // 
-            tabRegister.BackColor = Color.FromArgb(255, 192, 192);
+            tabRegister.BackColor = Color.FromArgb(0, 0, 0, 0);
+            tabRegister.BackgroundImage = (Image)resources.GetObject("tabRegister.BackgroundImage");
+            tabRegister.BackgroundImageLayout = ImageLayout.Stretch;
+            tabRegister.Controls.Add(pictureBox2);
             tabRegister.Controls.Add(chkShowReg);
             tabRegister.Controls.Add(btnRegister);
             tabRegister.Controls.Add(txtRegPass2);
@@ -160,19 +181,22 @@
             // chkShowReg
             // 
             chkShowReg.AutoSize = true;
+            chkShowReg.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             chkShowReg.Location = new Point(460, 156);
             chkShowReg.Name = "chkShowReg";
-            chkShowReg.Size = new Size(127, 24);
+            chkShowReg.Size = new Size(146, 27);
             chkShowReg.TabIndex = 3;
             chkShowReg.Text = "Hiện mật khẩu";
             // 
             // btnRegister
             // 
+            btnRegister.BackColor = Color.Moccasin;
             btnRegister.Location = new Point(242, 198);
             btnRegister.Name = "btnRegister";
             btnRegister.Size = new Size(200, 33);
             btnRegister.TabIndex = 4;
             btnRegister.Text = "Tạo tài khoản";
+            btnRegister.UseVisualStyleBackColor = false;
             btnRegister.Click += BtnRegister_Click;
             // 
             // txtRegPass2
@@ -201,29 +225,46 @@
             // lblRU
             // 
             lblRU.AutoSize = true;
-            lblRU.Location = new Point(162, 86);
+            lblRU.BackColor = Color.FromArgb(0, 0, 0, 0);
+            lblRU.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblRU.Location = new Point(147, 86);
             lblRU.Name = "lblRU";
-            lblRU.Size = new Size(74, 20);
+            lblRU.Size = new Size(87, 23);
             lblRU.TabIndex = 5;
             lblRU.Text = "Tài khoản:";
             // 
             // lblRP
             // 
             lblRP.AutoSize = true;
-            lblRP.Location = new Point(162, 121);
+            lblRP.BackColor = Color.FromArgb(0, 0, 0, 0);
+            lblRP.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblRP.Location = new Point(147, 122);
             lblRP.Name = "lblRP";
-            lblRP.Size = new Size(73, 20);
+            lblRP.Size = new Size(88, 23);
             lblRP.TabIndex = 6;
             lblRP.Text = "Mật khẩu:";
             // 
             // lblRP2
             // 
             lblRP2.AutoSize = true;
-            lblRP2.Location = new Point(162, 156);
+            lblRP2.BackColor = Color.FromArgb(0, 0, 0, 0);
+            lblRP2.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblRP2.Location = new Point(147, 153);
             lblRP2.Name = "lblRP2";
-            lblRP2.Size = new Size(68, 20);
+            lblRP2.Size = new Size(78, 23);
             lblRP2.TabIndex = 7;
             lblRP2.Text = "Nhập lại:";
+            // 
+            // pictureBox2
+            // 
+            pictureBox2.BackColor = Color.FromArgb(0, 0, 0, 0);
+            pictureBox2.BackgroundImage = (Image)resources.GetObject("pictureBox2.BackgroundImage");
+            pictureBox2.BackgroundImageLayout = ImageLayout.Stretch;
+            pictureBox2.Location = new Point(16, 83);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(125, 129);
+            pictureBox2.TabIndex = 8;
+            pictureBox2.TabStop = false;
             // 
             // DangNhap
             // 
@@ -237,8 +278,10 @@
             tabControl.ResumeLayout(false);
             tabLogin.ResumeLayout(false);
             tabLogin.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             tabRegister.ResumeLayout(false);
             tabRegister.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
 
         }
@@ -247,5 +290,7 @@
         private Label lblRU;
         private Label lblRP;
         private Label lblRP2;
+        private PictureBox pictureBox1;
+        private PictureBox pictureBox2;
     }
 }
