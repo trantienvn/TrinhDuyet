@@ -51,7 +51,7 @@
 - 👤 **Lưu thông tin người dùng:**  
   → *(`UserStore.cs`)*
 - 🕘 **Lịch sử truy cập & Bookmark:**  
-  → *(`LichSu.cs`, `Bookmark.cs`) nếu có*
+  → *(`LichSu.cs`, `Bookmark.cs`) 
 
 ---
 
