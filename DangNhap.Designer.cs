@@ -34,6 +34,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DangNhap));
             tabControl = new TabControl();
             tabLogin = new TabPage();
+            label1 = new Label();
             pictureBox1 = new PictureBox();
             chkShowLogin = new CheckBox();
             btnLogin = new Button();
@@ -42,6 +43,7 @@
             lblLU = new Label();
             lblLP = new Label();
             tabRegister = new TabPage();
+            pictureBox2 = new PictureBox();
             chkShowReg = new CheckBox();
             btnRegister = new Button();
             txtRegPass2 = new TextBox();
@@ -50,7 +52,7 @@
             lblRU = new Label();
             lblRP = new Label();
             lblRP2 = new Label();
-            pictureBox2 = new PictureBox();
+            label2 = new Label();
             tabControl.SuspendLayout();
             tabLogin.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -74,6 +76,7 @@
             tabLogin.BackColor = Color.FromArgb(255, 192, 192);
             tabLogin.BackgroundImage = (Image)resources.GetObject("tabLogin.BackgroundImage");
             tabLogin.BackgroundImageLayout = ImageLayout.Stretch;
+            tabLogin.Controls.Add(label1);
             tabLogin.Controls.Add(pictureBox1);
             tabLogin.Controls.Add(chkShowLogin);
             tabLogin.Controls.Add(btnLogin);
@@ -87,12 +90,23 @@
             tabLogin.TabIndex = 0;
             tabLogin.Text = "Đăng nhập";
             // 
+            // label1
+            // 
+            label1.BackColor = Color.FromArgb(0, 0, 0, 0);
+            label1.Font = new Font("Segoe UI", 22.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            label1.Location = new Point(167, 39);
+            label1.Name = "label1";
+            label1.Size = new Size(369, 55);
+            label1.TabIndex = 7;
+            label1.Text = "Đăng Nhập";
+            label1.TextAlign = ContentAlignment.MiddleCenter;
+            // 
             // pictureBox1
             // 
             pictureBox1.BackColor = Color.FromArgb(0, 0, 0, 0);
             pictureBox1.BackgroundImage = (Image)resources.GetObject("pictureBox1.BackgroundImage");
             pictureBox1.BackgroundImageLayout = ImageLayout.Stretch;
-            pictureBox1.Location = new Point(25, 72);
+            pictureBox1.Location = new Point(24, 127);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(125, 129);
             pictureBox1.TabIndex = 6;
@@ -103,7 +117,7 @@
             chkShowLogin.AutoSize = true;
             chkShowLogin.BackColor = Color.FromArgb(0, 0, 0, 0);
             chkShowLogin.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            chkShowLogin.Location = new Point(455, 129);
+            chkShowLogin.Location = new Point(467, 170);
             chkShowLogin.Name = "chkShowLogin";
             chkShowLogin.Size = new Size(146, 27);
             chkShowLogin.TabIndex = 2;
@@ -113,7 +127,7 @@
             // btnLogin
             // 
             btnLogin.BackColor = Color.NavajoWhite;
-            btnLogin.Location = new Point(249, 180);
+            btnLogin.Location = new Point(261, 221);
             btnLogin.Name = "btnLogin";
             btnLogin.Size = new Size(200, 33);
             btnLogin.TabIndex = 3;
@@ -123,7 +137,7 @@
             // 
             // txtLoginPass
             // 
-            txtLoginPass.Location = new Point(249, 127);
+            txtLoginPass.Location = new Point(261, 168);
             txtLoginPass.Name = "txtLoginPass";
             txtLoginPass.Size = new Size(200, 27);
             txtLoginPass.TabIndex = 1;
@@ -131,7 +145,7 @@
             // 
             // txtLoginUser
             // 
-            txtLoginUser.Location = new Point(249, 87);
+            txtLoginUser.Location = new Point(261, 128);
             txtLoginUser.Name = "txtLoginUser";
             txtLoginUser.Size = new Size(200, 27);
             txtLoginUser.TabIndex = 0;
@@ -141,7 +155,7 @@
             lblLU.AutoSize = true;
             lblLU.BackColor = Color.FromArgb(0, 0, 0, 0);
             lblLU.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblLU.Location = new Point(156, 91);
+            lblLU.Location = new Point(168, 132);
             lblLU.Name = "lblLU";
             lblLU.Size = new Size(87, 23);
             lblLU.TabIndex = 4;
@@ -152,7 +166,7 @@
             lblLP.AutoSize = true;
             lblLP.BackColor = Color.FromArgb(0, 0, 0, 0);
             lblLP.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblLP.Location = new Point(155, 128);
+            lblLP.Location = new Point(167, 169);
             lblLP.Name = "lblLP";
             lblLP.Size = new Size(88, 23);
             lblLP.TabIndex = 5;
@@ -163,6 +177,7 @@
             tabRegister.BackColor = Color.FromArgb(0, 0, 0, 0);
             tabRegister.BackgroundImage = (Image)resources.GetObject("tabRegister.BackgroundImage");
             tabRegister.BackgroundImageLayout = ImageLayout.Stretch;
+            tabRegister.Controls.Add(label2);
             tabRegister.Controls.Add(pictureBox2);
             tabRegister.Controls.Add(chkShowReg);
             tabRegister.Controls.Add(btnRegister);
@@ -178,11 +193,22 @@
             tabRegister.TabIndex = 1;
             tabRegister.Text = "Đăng ký";
             // 
+            // pictureBox2
+            // 
+            pictureBox2.BackColor = Color.FromArgb(0, 0, 0, 0);
+            pictureBox2.BackgroundImage = (Image)resources.GetObject("pictureBox2.BackgroundImage");
+            pictureBox2.BackgroundImageLayout = ImageLayout.Stretch;
+            pictureBox2.Location = new Point(35, 119);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(125, 129);
+            pictureBox2.TabIndex = 8;
+            pictureBox2.TabStop = false;
+            // 
             // chkShowReg
             // 
             chkShowReg.AutoSize = true;
             chkShowReg.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            chkShowReg.Location = new Point(460, 156);
+            chkShowReg.Location = new Point(479, 192);
             chkShowReg.Name = "chkShowReg";
             chkShowReg.Size = new Size(146, 27);
             chkShowReg.TabIndex = 3;
@@ -191,7 +217,7 @@
             // btnRegister
             // 
             btnRegister.BackColor = Color.Moccasin;
-            btnRegister.Location = new Point(242, 198);
+            btnRegister.Location = new Point(261, 234);
             btnRegister.Name = "btnRegister";
             btnRegister.Size = new Size(200, 33);
             btnRegister.TabIndex = 4;
@@ -201,7 +227,7 @@
             // 
             // txtRegPass2
             // 
-            txtRegPass2.Location = new Point(242, 153);
+            txtRegPass2.Location = new Point(261, 189);
             txtRegPass2.Name = "txtRegPass2";
             txtRegPass2.Size = new Size(200, 27);
             txtRegPass2.TabIndex = 2;
@@ -209,7 +235,7 @@
             // 
             // txtRegPass
             // 
-            txtRegPass.Location = new Point(242, 118);
+            txtRegPass.Location = new Point(261, 154);
             txtRegPass.Name = "txtRegPass";
             txtRegPass.Size = new Size(200, 27);
             txtRegPass.TabIndex = 1;
@@ -217,7 +243,7 @@
             // 
             // txtRegUser
             // 
-            txtRegUser.Location = new Point(242, 83);
+            txtRegUser.Location = new Point(261, 119);
             txtRegUser.Name = "txtRegUser";
             txtRegUser.Size = new Size(200, 27);
             txtRegUser.TabIndex = 0;
@@ -227,7 +253,7 @@
             lblRU.AutoSize = true;
             lblRU.BackColor = Color.FromArgb(0, 0, 0, 0);
             lblRU.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblRU.Location = new Point(147, 86);
+            lblRU.Location = new Point(166, 122);
             lblRU.Name = "lblRU";
             lblRU.Size = new Size(87, 23);
             lblRU.TabIndex = 5;
@@ -238,7 +264,7 @@
             lblRP.AutoSize = true;
             lblRP.BackColor = Color.FromArgb(0, 0, 0, 0);
             lblRP.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblRP.Location = new Point(147, 122);
+            lblRP.Location = new Point(166, 158);
             lblRP.Name = "lblRP";
             lblRP.Size = new Size(88, 23);
             lblRP.TabIndex = 6;
@@ -249,22 +275,22 @@
             lblRP2.AutoSize = true;
             lblRP2.BackColor = Color.FromArgb(0, 0, 0, 0);
             lblRP2.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblRP2.Location = new Point(147, 153);
+            lblRP2.Location = new Point(166, 189);
             lblRP2.Name = "lblRP2";
             lblRP2.Size = new Size(78, 23);
             lblRP2.TabIndex = 7;
             lblRP2.Text = "Nhập lại:";
             // 
-            // pictureBox2
+            // label2
             // 
-            pictureBox2.BackColor = Color.FromArgb(0, 0, 0, 0);
-            pictureBox2.BackgroundImage = (Image)resources.GetObject("pictureBox2.BackgroundImage");
-            pictureBox2.BackgroundImageLayout = ImageLayout.Stretch;
-            pictureBox2.Location = new Point(16, 83);
-            pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(125, 129);
-            pictureBox2.TabIndex = 8;
-            pictureBox2.TabStop = false;
+            label2.BackColor = Color.FromArgb(0, 0, 0, 0);
+            label2.Font = new Font("Segoe UI", 22.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            label2.Location = new Point(153, 39);
+            label2.Name = "label2";
+            label2.Size = new Size(369, 55);
+            label2.TabIndex = 9;
+            label2.Text = "Đăng Ký";
+            label2.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // DangNhap
             // 
@@ -292,5 +318,7 @@
         private Label lblRP2;
         private PictureBox pictureBox1;
         private PictureBox pictureBox2;
+        private Label label1;
+        private Label label2;
     }
 }
