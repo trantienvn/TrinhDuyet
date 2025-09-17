@@ -1,20 +1,18 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.ApplicationServices;
+using Microsoft.Web.WebView2.Core;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.Web.WebView2.Core;
 
 namespace TrinhDuyet
 {
     public partial class MainWebForm : Form
     {
-        private List<string> historyList = new List<string>();
-        private List<string> bookmarks = new List<string>();
-        private string[] loginInfo = new string[2];
-        private string bookmarkFile = "bookmarks.txt";
+        private string Username = "";
         private bool isLoggedIn = false;
         private string currentUrlTxt = "";
         private string lastSearchKeyword = "";
@@ -177,14 +175,6 @@ namespace TrinhDuyet
                 MessageBox.Show("Lỗi khi tải trang: " + ex.Message);
             }
         }
-        private void mainWebView_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e)
-        {
-            e.Handled = true;
-            // Mở cửa sổ mới giống hệt form này, nhưng với URL mới
-            var newBrowser = new MainWebForm(e.Uri);
-            newBrowser.Show();
-        }
-
         private async Task NavigateFromInput()
         {
             try
@@ -209,10 +199,11 @@ namespace TrinhDuyet
                         isSearch = true;
                         await NavigateToUrl("https://www.google.com/search?q=" + Uri.EscapeDataString(input));
                     }
-                    else { 
+                    else
+                    {
                         isSearch = false;
                         await NavigateToUrl(input);
-                }
+                    }
                 }
                 else
                 {
@@ -225,60 +216,130 @@ namespace TrinhDuyet
                 MessageBox.Show("Lỗi khi tải trang: " + ex.Message);
             }
         }
+        
+        // ====== Lắng nghe WebView ====
+        private void mainWebView_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e)
+        {
+            e.Handled = true;
+            // Mở cửa sổ mới giống hệt form này, nhưng với URL mới
+            var newBrowser = new MainWebForm(e.Uri);
+            newBrowser.Show();
+        }
+        private void mainWebView_SourceChanged(object sender, CoreWebView2SourceChangedEventArgs e)
+        {
+            txtUrl.Text = mainWebView.Source?.AbsoluteUri;
+            UpdateUIAfterNavigation();
+        }
+
 
         // ======= BOOKMARKS =======
-        private void LoadBookmarks()
-        {
-            if (File.Exists(bookmarkFile))
-                bookmarks = new List<string>(File.ReadAllLines(bookmarkFile));
-        }
-
-        private void SaveBookmarks()
-        {
-            File.WriteAllLines(bookmarkFile, bookmarks);
-        }
-
+        string[] dautrang = [];
         private void ToggleBookmark(string url)
         {
-            if (bookmarks.Contains(url))
+            dautrang = UserStore.GetBookmarks(Username).Select(a=>a.Url).ToArray();
+
+            if (dautrang.Contains(url))
             {
-                bookmarks.Remove(url);
+                UserStore.XoaDauTrang(Username, url);
+                dautrang = dautrang.Where(a=>a!= url).ToArray();
                 bookmarkIcon.Image = Properties.Resources.star;
             }
             else
             {
-                bookmarks.Insert(0, url);
+                UserStore.ThemDauTrang(Username, url, mainWebView.CoreWebView2.DocumentTitle);
+                dautrang = [.. dautrang, url];
                 bookmarkIcon.Image = Properties.Resources.star_fill;
             }
-            SaveBookmarks();
+            
+            
         }
         private void ShowBookmarks()
         {
-            if (!File.Exists(bookmarkFile))
-            {
-                MessageBox.Show("Chưa có dấu trang!");
-                return;
-            }
+            var bookmarks = UserStore.GetBookmarks(Username);
 
-            string[] bookmark = File.ReadAllLines(bookmarkFile);
             Form bookmarkForm = new Form
             {
-                Text = "Trang đã được đánh dấu sao",
-                Size = new Size(600, 400)
+                Text = "Trang đã đánh dấu",
+                Size = new Size(600, 400),
+                StartPosition = FormStartPosition.CenterParent
             };
 
-            ListBox listBox = new ListBox { Dock = DockStyle.Fill };
-            listBox.Items.AddRange(bookmark);
-            listBox.DoubleClick += (s, e) =>
+            ListView listView = new ListView
             {
-                if (listBox.SelectedItem != null)
+                Dock = DockStyle.Fill,
+                View = View.Details,
+                FullRowSelect = true
+            };
+
+            listView.Columns.Add("Tên hiển thị", 200);
+            listView.Columns.Add("URL", 350);
+            listView.Columns.Add("", 50);
+
+            foreach (var bm in bookmarks)
+            {
+                var item = new ListViewItem(bm.TenHienThi)
                 {
-                    _ = NavigateToUrl(listBox.SelectedItem.ToString());
+                    Tag = bm.Id // lưu Id để xóa trong DB
+                };
+                item.SubItems.Add(bm.Url);
+                item.SubItems.Add("⋮");
+                listView.Items.Add(item);
+            }
+
+            // Double click để mở trang
+            listView.DoubleClick += (s, e) =>
+            {
+                if (listView.SelectedItems.Count > 0)
+                {
+                    _ = NavigateToUrl(listView.SelectedItems[0].SubItems[1].Text);
                     bookmarkForm.Close();
                 }
             };
 
-            bookmarkForm.Controls.Add(listBox);
+            // Context menu cho ⋮
+            ContextMenuStrip menu = new ContextMenuStrip();
+            menu.Items.Add("Sao chép URL", null, (s, e) =>
+            {
+                if (listView.SelectedItems.Count > 0)
+                {
+                    Clipboard.SetText(listView.SelectedItems[0].SubItems[1].Text);
+                }
+            });
+            menu.Items.Add("Xóa bookmark", null, (s, e) =>
+            {
+                if (listView.SelectedItems.Count > 0)
+                {
+                    var selected = listView.SelectedItems[0];
+                    int bmId = (int)selected.Tag;
+
+                    // Xóa trong DB
+                    UserStore.XoaDauTrang(Username,bmId);
+
+                    // Xóa trong UI
+                    listView.Items.Remove(selected);
+                }
+            });
+
+            listView.MouseClick += (s, e) =>
+            {
+                var info = listView.HitTest(e.Location);
+                if (info.Item != null && info.SubItem != null)
+                {
+                    int subItemIndex = info.Item.SubItems.IndexOf(info.SubItem);
+                    if (subItemIndex == 2) // cột ⋮
+                    {
+                        listView.FocusedItem = info.Item;
+                        menu.Show(listView, e.Location);
+                    }
+                }
+            };
+
+            Button btnClose = new Button { Text = "Đóng", Dock = DockStyle.Bottom, Size = new Size(200, 33) };
+            btnClose.Click += (s, e) => bookmarkForm.Close();
+
+            bookmarkForm.Controls.Add(listView);
+            bookmarkForm.Controls.Add(btnClose);
+
             bookmarkForm.ShowDialog();
         }
 
@@ -297,36 +358,19 @@ namespace TrinhDuyet
                 txtUrl.Text = HideProtocol(currentUrl);
             }
             currentUrlTxt = currentUrl;
-            // Nếu URL đã có trong lịch sử thì xóa khỏi vị trí cũ
-            historyList.Remove(currentUrl);
-
-            // Thêm URL mới lên đầu danh sách
-            historyList.Insert(0, currentUrl);
-
-            // Ghi lại toàn bộ lịch sử vào file (URL mới nhất trên đầu)
-            File.WriteAllLines("history.txt", historyList);
-
-
-            bookmarkIcon.Image = bookmarks.Contains(currentUrl)
+            UserStore.ThemLichSu(Username, currentUrl);
+            dautrang = UserStore.GetBookmarks(Username).Select(dt => dt.Url).ToArray();
+            bookmarkIcon.Image = dautrang.Contains(currentUrl)
                 ? Properties.Resources.star_fill
                 : Properties.Resources.star;
             LoadUrlAutoComplete();
         }
-        private void mainWebView_SourceChanged(object sender, CoreWebView2SourceChangedEventArgs e)
-        {
-            txtUrl.Text = mainWebView.Source?.AbsoluteUri;
-            UpdateUIAfterNavigation();
-        }
-
+        
         private void ShowHistory()
         {
-            if (!File.Exists("history.txt"))
-            {
-                MessageBox.Show("Chưa có lịch sử!");
-                return;
-            }
+            var lichSu = UserStore.GetLichSu(Username);
+            string[] history = lichSu.Select(ls => ls.Url).Distinct().ToArray();
 
-            string[] history = File.ReadAllLines("history.txt");
             Form historyForm = new Form
             {
                 Text = "Lịch sử duyệt web",
@@ -345,9 +389,12 @@ namespace TrinhDuyet
             listView.Columns.Add("URL", 500);
             listView.Columns.Add("", 50);
 
-            foreach (var url in history)
+            foreach (var ls in lichSu)
             {
-                var item = new ListViewItem(url);
+                var item = new ListViewItem(ls.Url)
+                {
+                    Tag = ls.Id // lưu Id để xóa trong DB
+                };
                 item.SubItems.Add("⋮");
                 listView.Items.Add(item);
             }
@@ -375,8 +422,14 @@ namespace TrinhDuyet
             {
                 if (listView.SelectedItems.Count > 0)
                 {
-                    listView.Items.Remove(listView.SelectedItems[0]);
-                    File.WriteAllLines("history.txt", listView.Items.Cast<ListViewItem>().Select(i => i.Text));
+                    var selected = listView.SelectedItems[0];
+                    int lichSuId = (int)selected.Tag;
+
+                    // Xóa trong DB
+                    UserStore.XoaLichSu(lichSuId);
+
+                    // Xóa trong UI
+                    listView.Items.Remove(selected);
                 }
             });
 
@@ -395,7 +448,7 @@ namespace TrinhDuyet
                 }
             };
 
-            Button btnClose = new Button { Text = "Đóng", Dock = DockStyle.Bottom, Size = new Size(200,33) };
+            Button btnClose = new Button { Text = "Đóng", Dock = DockStyle.Bottom, Size = new Size(200, 33) };
             btnClose.Click += (s, e) => historyForm.Close();
 
             historyForm.Controls.Add(listView);
@@ -403,6 +456,7 @@ namespace TrinhDuyet
 
             historyForm.ShowDialog();
         }
+
 
 
 
@@ -452,27 +506,18 @@ namespace TrinhDuyet
         private async void MainWebForm_Load(object sender, EventArgs e)
         {
             //this.WindowState = FormWindowState.Maximized;
-            LoadBookmarks();
+            var cfg = ConfigManager.Load();
             getLogin();
-            string savedUser = loginInfo[0];
-            string savedPass = loginInfo[1];
-
-            if (!string.IsNullOrEmpty(savedUser) && !string.IsNullOrEmpty(savedPass))
-            {
-                var store = new UserStore("users.db");
-                if (store.Login(savedUser, savedPass, out var err))
-                {
-                    userIcon.Image = Properties.Resources.loggedin;
-                    isLoggedIn = true;
-                }
-            }
+            isLoggedIn = cfg.LoggedIn;
+            userIcon.Image = isLoggedIn ? Properties.Resources.loggedin: Properties.Resources.user;
+            
             await NavigateToUrl("https://google.com.vn");
         }
         private void LoadUrlAutoComplete()
         {
-            if (!File.Exists("history.txt")) return;
+            var lichSu = UserStore.GetLichSu(Username);
+            string[] historyUrls = lichSu.Select(ls => ls.Url).Distinct().ToArray();
 
-            string[] historyUrls = File.ReadAllLines("history.txt");
             AutoCompleteStringCollection autoCompleteUrls = new AutoCompleteStringCollection();
             autoCompleteUrls.AddRange(historyUrls);
 
@@ -493,14 +538,7 @@ namespace TrinhDuyet
             if (result == DialogResult.Yes)
             {
                 // Xóa danh sách trong bộ nhớ
-                historyList.Clear();
-
-                // Xóa file nếu tồn tại
-                string filePath = "history.txt";
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
+                UserStore.XoaTatCaLichSu(Username);
 
                 MessageBox.Show("Đã xóa toàn bộ lịch sử duyệt web.", "Hoàn tất", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -560,23 +598,19 @@ namespace TrinhDuyet
 
             else
             {
-                menu.Items.Add($"Xin chào!, {loginInfo[0]}", null, (s,ev) => OpenInfoDialog());
+                menu.Items.Add($"Xin chào!, {Username}", null, (s,ev) => OpenInfoDialog());
                 menu.Items.Add("Đăng xuất", null, (s, ev) => Logout());
             }
             menu.Show(userIcon, new Point(0, userIcon.Height));
         }
         private void Login()
         {
-            var store = new UserStore("users.db");
-            DangNhap dn = new DangNhap(store);
+            DangNhap dn = new DangNhap();
             var result = dn.ShowDialog();
             if (result == DialogResult.OK)
             {
                 userIcon.Image = Properties.Resources.loggedin;
                 isLoggedIn = true;
-                string filePath = "User.data";
-                // Ví dụ: dn.Username và dn.Password là thông tin từ form đăng nhập
-                File.WriteAllLines(filePath, new string[] { dn.Username, dn.Password });
                 getLogin();
             }
         }
@@ -584,24 +618,16 @@ namespace TrinhDuyet
         {
             isLoggedIn = false;
             userIcon.Image = Properties.Resources.user;
-            string filePath = "User.data";
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
+            var cfg = ConfigManager.Load();
+            cfg.Username = "userclient";
+            cfg.LoggedIn = false;
+            ConfigManager.Save(cfg);
             getLogin();
         }
         private void getLogin()
         {
-            if (File.Exists("User.data")) { 
-                string[] Info = File.ReadAllLines("User.data");
-                loginInfo = Info;
-            }
-            else
-            {
-                loginInfo[0] = null;
-                loginInfo[1] = null;
-            }
+            isLoggedIn = ConfigManager.Load().LoggedIn;
+            Username = ConfigManager.Load().Username;
 
         }
         private void OpenInfoDialog() { 

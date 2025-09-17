@@ -20,7 +20,6 @@ namespace TrinhDuyet
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            var store = new UserStore("users.db");
             string startUrl = "https://www.google.com";
             if (args.Length > 0)
             {
