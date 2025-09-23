@@ -185,7 +185,6 @@
             // 
             toolTip.BackColor = Color.LightSalmon;
             toolTip.ForeColor = SystemColors.GradientInactiveCaption;
-            toolTip.Popup += toolTip_Popup;
             // 
             // MainWebForm
             // 

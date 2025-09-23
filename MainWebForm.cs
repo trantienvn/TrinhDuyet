@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
 
@@ -290,7 +291,7 @@ namespace TrinhDuyet
             string currentUrl = mainWebView.Source.ToString();
             this.Text = mainWebView.CoreWebView2.DocumentTitle;
             // txtUrl.Text = currentUrl;
-            if (isSearch)
+            if (isSearch && HttpUtility.UrlDecode(currentUrl).Contains(lastSearchKeyword))
             {
                 txtUrl.Text = lastSearchKeyword;
             }
@@ -518,7 +519,7 @@ namespace TrinhDuyet
 
         private void reloadBtn_Click(object sender, EventArgs e) => mainWebView.Reload();
         private void forwardBtn_Click(object sender, EventArgs e) { if (mainWebView.CanGoForward) mainWebView.GoForward(); }
-        private void backBtn_Click(object sender, EventArgs e) { if (mainWebView.CanGoBack) mainWebView.GoBack(); }
+        private void backBtn_Click(object sender, EventArgs e) { if (mainWebView.CanGoBack) mainWebView.GoBack(); lastSearchKeyword = ""; }
         private void bookmarkIcon_Click(object sender, EventArgs e) => ToggleBookmark(mainWebView.Source.ToString());
 
         private void menuBtn_Click(object sender, EventArgs e)
@@ -614,9 +615,6 @@ namespace TrinhDuyet
             userInfo.ShowDialog();
         }
 
-        private void toolTip_Popup(object sender, PopupEventArgs e)
-        {
 
-        }
     }
 }
