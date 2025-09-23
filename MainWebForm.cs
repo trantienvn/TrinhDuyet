@@ -91,7 +91,8 @@ namespace TrinhDuyet
                 var newForm = new MainWebForm("https://www.google.com"); // hoặc truyền URL bạn muốn
                 newForm.Show();
             }
-            if (e.Control && e.KeyCode == Keys.H) { 
+            if (e.Control && e.KeyCode == Keys.H)
+            {
                 ShowHistory();
             }
             if (e.Control && e.KeyCode == Keys.E)
@@ -209,10 +210,11 @@ namespace TrinhDuyet
                         isSearch = true;
                         await NavigateToUrl("https://www.google.com/search?q=" + Uri.EscapeDataString(input));
                     }
-                    else { 
+                    else
+                    {
                         isSearch = false;
                         await NavigateToUrl(input);
-                }
+                    }
                 }
                 else
                 {
@@ -395,7 +397,7 @@ namespace TrinhDuyet
                 }
             };
 
-            Button btnClose = new Button { Text = "Đóng", Dock = DockStyle.Bottom, Size = new Size(200,33) };
+            Button btnClose = new Button { Text = "Đóng", Dock = DockStyle.Bottom, Size = new Size(200, 33) };
             btnClose.Click += (s, e) => historyForm.Close();
 
             historyForm.Controls.Add(listView);
@@ -556,11 +558,12 @@ namespace TrinhDuyet
             {
 
                 menu.Items.Add("Đăng nhập", null, (s, ev) => Login());
+
             }
 
             else
             {
-                menu.Items.Add($"Xin chào!, {loginInfo[0]}", null, (s,ev) => OpenInfoDialog());
+                menu.Items.Add($"Xin chào!, {loginInfo[0]}", null, (s, ev) => OpenInfoDialog());
                 menu.Items.Add("Đăng xuất", null, (s, ev) => Logout());
             }
             menu.Show(userIcon, new Point(0, userIcon.Height));
@@ -593,7 +596,8 @@ namespace TrinhDuyet
         }
         private void getLogin()
         {
-            if (File.Exists("User.data")) { 
+            if (File.Exists("User.data"))
+            {
                 string[] Info = File.ReadAllLines("User.data");
                 loginInfo = Info;
             }
@@ -604,9 +608,15 @@ namespace TrinhDuyet
             }
 
         }
-        private void OpenInfoDialog() { 
+        private void OpenInfoDialog()
+        {
             UserInfo userInfo = new UserInfo();
             userInfo.ShowDialog();
+        }
+
+        private void toolTip_Popup(object sender, PopupEventArgs e)
+        {
+
         }
     }
 }
