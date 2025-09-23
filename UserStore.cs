@@ -1,239 +1,99 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace TrinhDuyet
 {
-    // DbContext quản lý dữ liệu trình duyệt
-    internal class UserStore : DbContext
+    public class UserStore
     {
-        public DbSet<TaiKhoan> Users { get; set; }
-        public DbSet<LichSu> LichSu { get; set; }
-        public DbSet<DauTrang> DauTrang { get; set; }
+        private readonly string _path;
+        private readonly Dictionary<string, (byte[] Salt, byte[] Hash, int Iter)> _users;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public UserStore(string path)
         {
-            optionsBuilder.UseSqlServer(
-                @"Server=(localdb)\MSSQLLocalDB;Database=TrinhDuyet;Trusted_Connection=true;");
-        }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            // Seed 1 user mặc định
-            modelBuilder.Entity<TaiKhoan>().HasData(
-                new TaiKhoan
-                {
-                    Username = "userclient",
-                    Password = "" // ⚠️ nên hash để an toàn
-                }
-            );
+            _path = path;
+            _users = new Dictionary<string, (byte[], byte[], int)>(StringComparer.OrdinalIgnoreCase);
+            Load();
         }
 
-        // Tạo user mới
-        public static bool TaoUser(string tenDangNhap, string matKhau)
+        public bool Register(string username, string password, out string error)
         {
-            using var db = new UserStore();
-            db.Database.EnsureCreated(); // tạo DB nếu chưa có
-
-            bool existed = db.Users.Any(u => u.Username == tenDangNhap);
-            if (existed)
+            error = "";
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
             {
+                error = "Tên đăng nhập và mật khẩu không được để trống.";
+                return false;
+            }
+            if (_users.ContainsKey(username))
+            {
+                error = "Tên đăng nhập đã tồn tại.";
                 return false;
             }
 
-            var user = new TaiKhoan
-            {
-                Username = tenDangNhap,
-                Password = matKhau, // ⚠️ gợi ý: hash password để an toàn hơn
-            };
-
-            db.Users.Add(user);
-            db.SaveChanges();
+            var salt = RandomBytes(16);
+            int iter = 100_000;
+            var hash = Pbkdf2(password, salt, iter, 32);
+            _users[username] = (salt, hash, iter);
+            Save();
             return true;
         }
 
-        // Kiểm tra đăng nhập
-        public static bool DangNhap(string tenDangNhap, string matKhau)
+        public bool Login(string username, string password, out string error)
         {
-            using var db = new UserStore();
-            var user = db.Users.FirstOrDefault(u => u.Username == tenDangNhap && u.Password == matKhau);
-
-            return user != null;
-        }
-        // =====================
-        // 📌 Quản lý Lịch sử
-        // =====================
-        public static void ThemLichSu(string userId, string url)
-        {
-            using var db = new UserStore();
-            db.Database.EnsureCreated();
-
-            var lichSu = new LichSu
+            error = "";
+            if (!_users.TryGetValue(username, out var rec))
             {
-                Url = url,
-                TaiKhoanId = userId
-            };
-            db.LichSu.Add(lichSu);
-            db.SaveChanges();
-        }
-        public static void XoaLichSu(int lichSuId)
-        {
-            using var db = new UserStore();
-            var lichSu = db.LichSu.Find(lichSuId);
-            if (lichSu != null)
-            {
-                db.LichSu.Remove(lichSu);
-                db.SaveChanges();
-            }
-        }
-        public static void XoaTatCaLichSu(string userId)
-        {
-            using var db = new UserStore();
-            var lichSuList = db.LichSu.Where(ls => ls.TaiKhoanId == userId);
-
-            if (lichSuList.Any())
-            {
-                db.LichSu.RemoveRange(lichSuList);
-                db.SaveChanges();
-                Console.WriteLine($"🗑️ Đã xóa toàn bộ lịch sử của user {userId}");
-            }
-            else
-            {
-                Console.WriteLine("⚠️ Không có lịch sử nào để xóa");
-            }
-        }
-
-
-        public static List<LichSu> GetLichSu(string userId)
-        {
-            using var db = new UserStore();
-            return db.LichSu
-                     .Where(ls => ls.TaiKhoanId == userId)
-                     .OrderByDescending(ls => ls.ThoiGian)
-                     .ToList();
-        }
-
-        // =====================
-        // 📌 Quản lý Bookmark
-        // =====================
-        public static bool ChuyenDoiBookmark(string userId, string url, string ten = "")
-        {
-            using var db = new UserStore();
-            db.Database.EnsureCreated();
-
-            // Kiểm tra đã có bookmark chưa
-            var bm = db.DauTrang.FirstOrDefault(b => b.TaiKhoan.Username == userId && b.Url == url);
-
-            if (bm == null)
-            {
-                // 👉 Chưa có -> thêm mới
-                var bookmark = new DauTrang
-                {
-                    Url = url,
-                    TenHienThi = string.IsNullOrWhiteSpace(ten) ? url : ten,
-                    TaiKhoanId = userId
-                };
-                db.DauTrang.Add(bookmark);
-                return true;
-            }
-            else
-            {
-                // 👉 Đã có -> xóa đi
-                db.DauTrang.Remove(bm);
+                error = "Sai tài khoản hoặc mật khẩu.";
                 return false;
             }
-
-            db.SaveChanges();
-        }
-        public static void ThemDauTrang(string userId, string url, string TenHT = "")
-        {
-            using var db = new UserStore();
-            db.Database.EnsureCreated();
-
-            var dt = new DauTrang
+            var test = Pbkdf2(password, rec.Salt, rec.Iter, rec.Hash.Length);
+            if (!CryptographicOperations.FixedTimeEquals(test, rec.Hash))
             {
-                TenHienThi = TenHT,
-                Url = url,
-                TaiKhoanId = userId
-            };
-            db.DauTrang.Add(dt);
-            db.SaveChanges();
-        }
-
-        public static void XoaDauTrang(string userId, int id)
-        {
-            using var db = new UserStore();
-            db.Database.EnsureCreated();
-
-            // Kiểm tra đã có bookmark chưa
-            var bm = db.DauTrang.FirstOrDefault(b => b.TaiKhoan.Username == userId && b.Id == id);
-            {
-                // 👉 Đã có -> xóa đi
-                db.DauTrang.Remove(bm);
+                error = "Sai tài khoản hoặc mật khẩu.";
+                return false;
             }
-
-            db.SaveChanges();
+            return true;
         }
-        public static void XoaDauTrang(string userId, string url)
-        {
-            using var db = new UserStore();
-            db.Database.EnsureCreated();
 
-            // Kiểm tra đã có bookmark chưa
-            var bm = db.DauTrang.FirstOrDefault(b => b.TaiKhoan.Username == userId && b.Url == url);
+        private void Load()
+        {
+            if (!File.Exists(_path)) return;
+            foreach (var line in File.ReadAllLines(_path))
             {
-                // 👉 Đã có -> xóa đi
-                db.DauTrang.Remove(bm);
+                if (string.IsNullOrWhiteSpace(line)) continue;
+                var parts = line.Split(':');
+                if (parts.Length < 4) continue;
+                var user = parts[0];
+                var salt = Convert.FromBase64String(parts[1]);
+                var hash = Convert.FromBase64String(parts[2]);
+                int iter = int.TryParse(parts[3], out var it) ? it : 100_000;
+                _users[user] = (salt, hash, iter);
             }
-
-            db.SaveChanges();
         }
 
-        public static List<DauTrang> GetBookmarks(string userId)
+        private void Save()
         {
-            using var db = new UserStore();
-            return db.DauTrang
-                     .Where(bm => bm.TaiKhoanId == userId)
-                     .OrderBy(bm => bm.NgayTao)
-                     .ToList();
+            var lines = _users.Select(kv =>
+                $"{kv.Key}:{Convert.ToBase64String(kv.Value.Salt)}:{Convert.ToBase64String(kv.Value.Hash)}:{kv.Value.Iter}");
+            File.WriteAllLines(_path, lines, Encoding.UTF8);
         }
 
-    }
+        private static byte[] RandomBytes(int len)
+        {
+            var b = new byte[len];
+            using (var rng = RandomNumberGenerator.Create()) rng.GetBytes(b);
+            return b;
+        }
 
-    // ----------------- ENTITY -----------------
-    public class TaiKhoan
-    {
-        [Key]
-        public string Username { get; set; }
-        public string Password { get; set; } = string.Empty;
-
-        // Quan hệ 1-nhiều
-        public List<LichSu> LichSuTruyCap { get; set; } = new List<LichSu>();
-        public List<DauTrang> DauTrangList { get; set; } = new List<DauTrang>();
-    }
-
-    public class LichSu
-    {
-        public int Id { get; set; }
-        public string Url { get; set; } = string.Empty;
-        public DateTime ThoiGian { get; set; } = DateTime.Now;
-
-        // Liên kết với User
-        public string TaiKhoanId { get; set; }
-        public TaiKhoan TaiKhoan { get; set; }
-    }
-
-    public class DauTrang
-    {
-        public int Id { get; set; }
-        public string Url { get; set; } = string.Empty;
-        public string TenHienThi { get; set; } = string.Empty;
-        public DateTime NgayTao { get; set; } = DateTime.Now;
-
-        // Liên kết với User
-        public string TaiKhoanId { get; set; }
-        public TaiKhoan TaiKhoan { get; set; }
+        private static byte[] Pbkdf2(string pwd, byte[] salt, int iterations, int len)
+        {
+            using (var pbkdf2 = new Rfc2898DeriveBytes(pwd, salt, iterations, HashAlgorithmName.SHA256))
+            {
+                return pbkdf2.GetBytes(len);
+            }
+        }
     }
 }

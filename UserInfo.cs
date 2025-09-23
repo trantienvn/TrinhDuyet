@@ -6,7 +6,7 @@ namespace TrinhDuyet
 {
     public partial class UserInfo : Form
     {
-        public string username = "userclient";
+        public string username = string.Empty;
 
         public UserInfo()
         {
@@ -27,8 +27,9 @@ namespace TrinhDuyet
 
         private void GetUsername()
         {
-            var cfg = ConfigManager.Load();
-            username = cfg.Username;
+            string[] Info = File.ReadAllLines("User.data");
+            if (Info.Length > 0)
+                username = Info[0];
         }
     }
 }

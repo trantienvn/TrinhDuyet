@@ -1,16 +1,28 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.Web.WebView2.Core;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace TrinhDuyet
 {
-    public partial class MainWebForm : Form
+    public partial class MainWebFormTest : Form
     {
+        // Import hàm WinAPI
+        [DllImport("user32.dll")]
+        public static extern bool ReleaseCapture();
+
+        [DllImport("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+
+        // Hằng số cho SendMessage
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HTCAPTION = 0x2;
         private List<string> historyList = new List<string>();
         private List<string> bookmarks = new List<string>();
         private string[] loginInfo = new string[2];
@@ -19,7 +31,7 @@ namespace TrinhDuyet
         private string currentUrlTxt = "";
         private string lastSearchKeyword = "";
         private bool isSearch = false;
-        public MainWebForm(string startUrl = "about:blank")
+        public MainWebFormTest(string startUrl = "about:blank")
         {
             this.StartPosition = FormStartPosition.CenterScreen;
             InitializeComponent();
@@ -30,7 +42,7 @@ namespace TrinhDuyet
             };
             //mainWebView.KeyPreview = true;
             mainWebView.KeyDown += MainWebForm_KeyDown;
-            // this.ControlBox = false;
+            this.ControlBox = false;
             //this.FormBorderStyle = FormBorderStyle.FixedSingle;
 
         }
@@ -88,10 +100,11 @@ namespace TrinhDuyet
             if (e.Control && e.KeyCode == Keys.N)
             {
                 e.Handled = true;
-                var newForm = new MainWebForm("https://www.google.com"); // hoặc truyền URL bạn muốn
+                var newForm = new MainWebFormTest("https://www.google.com"); // hoặc truyền URL bạn muốn
                 newForm.Show();
             }
-            if (e.Control && e.KeyCode == Keys.H) { 
+            if (e.Control && e.KeyCode == Keys.H)
+            {
                 ShowHistory();
             }
             if (e.Control && e.KeyCode == Keys.E)
@@ -181,7 +194,7 @@ namespace TrinhDuyet
         {
             e.Handled = true;
             // Mở cửa sổ mới giống hệt form này, nhưng với URL mới
-            var newBrowser = new MainWebForm(e.Uri);
+            var newBrowser = new MainWebFormTest(e.Uri);
             newBrowser.Show();
         }
 
@@ -286,8 +299,8 @@ namespace TrinhDuyet
         private void UpdateUIAfterNavigation()
         {
             string currentUrl = mainWebView.Source.ToString();
-            this.Text = mainWebView.CoreWebView2.DocumentTitle;
-            // txtUrl.Text = currentUrl;
+            //this.Text = "";
+            tittleTxt.Text = mainWebView.CoreWebView2.DocumentTitle;
             if (isSearch)
             {
                 txtUrl.Text = lastSearchKeyword;
@@ -297,8 +310,8 @@ namespace TrinhDuyet
                 txtUrl.Text = HideProtocol(currentUrl);
             }
             currentUrlTxt = currentUrl;
-            // Nếu URL đã có trong lịch sử thì xóa khỏi vị trí cũ
-            historyList.Remove(currentUrl);
+                // Nếu URL đã có trong lịch sử thì xóa khỏi vị trí cũ
+                historyList.Remove(currentUrl);
 
             // Thêm URL mới lên đầu danh sách
             historyList.Insert(0, currentUrl);
@@ -311,6 +324,16 @@ namespace TrinhDuyet
                 ? Properties.Resources.star_fill
                 : Properties.Resources.star;
             LoadUrlAutoComplete();
+        }
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                const int WS_CAPTION = 0x00C00000;
+                CreateParams cp = base.CreateParams;
+                cp.Style &= ~WS_CAPTION; // Xóa style caption (ẩn title bar)
+                return cp;
+            }
         }
         private void mainWebView_SourceChanged(object sender, CoreWebView2SourceChangedEventArgs e)
         {
@@ -395,7 +418,7 @@ namespace TrinhDuyet
                 }
             };
 
-            Button btnClose = new Button { Text = "Đóng", Dock = DockStyle.Bottom, Size = new Size(200,33) };
+            Button btnClose = new Button { Text = "Đóng", Dock = DockStyle.Bottom, Size = new Size(200, 33) };
             btnClose.Click += (s, e) => historyForm.Close();
 
             historyForm.Controls.Add(listView);
@@ -560,7 +583,7 @@ namespace TrinhDuyet
 
             else
             {
-                menu.Items.Add($"Xin chào!, {loginInfo[0]}", null, (s,ev) => OpenInfoDialog());
+                menu.Items.Add($"Xin chào!, {loginInfo[0]}", null, (s, ev) => OpenInfoDialog());
                 menu.Items.Add("Đăng xuất", null, (s, ev) => Logout());
             }
             menu.Show(userIcon, new Point(0, userIcon.Height));
@@ -593,7 +616,8 @@ namespace TrinhDuyet
         }
         private void getLogin()
         {
-            if (File.Exists("User.data")) { 
+            if (File.Exists("User.data"))
+            {
                 string[] Info = File.ReadAllLines("User.data");
                 loginInfo = Info;
             }
@@ -604,9 +628,94 @@ namespace TrinhDuyet
             }
 
         }
-        private void OpenInfoDialog() { 
+        private void OpenInfoDialog()
+        {
             UserInfo userInfo = new UserInfo();
             userInfo.ShowDialog();
+        }
+        private Rectangle previousBounds; // lưu kích thước và vị trí cũ
+        private bool isMaximized = false; // trạng thái maximize
+
+        private void pannel_DoubleClick(object sender, EventArgs e)
+        {
+            ToggleMaximizeRestore();
+        }
+
+        private void maxmize_Click(object sender, EventArgs e)
+        {
+            ToggleMaximizeRestore();
+        }
+
+        private void pannel_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Clicks == 1 && e.Button == MouseButtons.Left) // chỉ kéo khi click 1 lần
+            {
+                ReleaseCapture();
+                SendMessage(this.Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
+            }
+        }
+
+        private void close_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void ToggleMaximizeRestore()
+        {
+            if (!isMaximized)
+            {
+                // Lưu lại kích thước và vị trí hiện tại
+                previousBounds = this.Bounds;
+
+                // Lấy vùng làm việc (không bao gồm taskbar)
+                Rectangle workingArea = Screen.PrimaryScreen.WorkingArea;
+
+                // Maximize nhưng vẫn hiển thị taskbar
+                this.FormBorderStyle = FormBorderStyle.None; // nếu muốn borderless
+                this.Bounds = workingArea;
+
+                maxmize.Image = Properties.Resources.res; // đổi icon
+                isMaximized = true;
+            }
+            else
+            {
+                // Khôi phục kích thước và vị trí cũ
+                this.Bounds = previousBounds;
+                this.FormBorderStyle = FormBorderStyle.Sizable; // trả lại border
+
+                maxmize.Image = Properties.Resources.max; // đổi icon
+                isMaximized = false;
+            }
+        }
+
+        private void minisize_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+        private void Btn_MouseEnter(object sender, EventArgs e)
+        {
+            PictureBox pb = sender as PictureBox;
+
+            if (pb == close)
+            {
+                close.BackColor = Color.Red;  // hover close → đỏ
+                close.Image = Properties.Resources.close1;
+            }
+            else if (pb == minisize || pb == maxmize)
+            {
+                pb.BackColor = Color.FromArgb(30, 128, 128, 128);
+            }
+        }
+
+        private void Btn_MouseLeave(object sender, EventArgs e)
+        {
+            PictureBox pb = sender as PictureBox;
+
+            pb.BackColor = Color.Transparent;
+            if (pb == close)
+            {
+                close.Image = Properties.Resources.close;
+            }
         }
     }
 }

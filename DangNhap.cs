@@ -15,8 +15,9 @@ namespace TrinhDuyet
         private readonly UserStore _store;
         public string Username { get; private set; }
         public string Password { get; private set; }
-        public DangNhap()
+        public DangNhap(UserStore store)
         {
+            _store = store;
             this.StartPosition = FormStartPosition.CenterScreen;
 
             // Không cho thay đổi kích thước
@@ -38,7 +39,7 @@ namespace TrinhDuyet
 
         private void BtnLogin_Click(object sender, EventArgs e)
         {
-            if (UserStore.DangNhap(txtLoginUser.Text.Trim(), txtLoginPass.Text))
+            if (_store.Login(txtLoginUser.Text.Trim(), txtLoginPass.Text, out var err))
             {
                 MessageBox.Show("Đăng nhập thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.DialogResult = DialogResult.OK; // báo thành công
@@ -46,12 +47,10 @@ namespace TrinhDuyet
                 Password = txtLoginPass.Text;
                 this.Close();
                 // TODO: Mở form chính
-                LuuThongTin(Username);
-
             }
             else
             {
-                MessageBox.Show("Đăng nhập không thành công", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(err, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -62,26 +61,18 @@ namespace TrinhDuyet
                 MessageBox.Show("Mật khẩu nhập lại không khớp.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            if (UserStore.TaoUser(txtRegUser.Text.Trim(), txtRegPass.Text))
+            if (_store.Register(txtRegUser.Text.Trim(), txtRegPass.Text, out var err))
             {
                 MessageBox.Show("Đăng ký thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.DialogResult = DialogResult.OK; // báo thành công
                 Username = txtRegUser.Text;
                 Password = txtRegPass.Text;
                 this.Close();
-                LuuThongTin(Username);
             }
             else
             {
-                MessageBox.Show("Người dùng đã tồn tại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(err, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-        void LuuThongTin(string username)
-        {
-            var cfg = ConfigManager.Load();
-            cfg.Username = username;
-            cfg.LoggedIn = true;
-            ConfigManager.Save(cfg);
         }
     }
 }
