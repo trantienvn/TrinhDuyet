@@ -68,3 +68,4 @@ TestResult*/
 *.sqlite
 *.mdf
 *.ldf
+/TrinhDuyet.exe.WebView2/EBWebView
